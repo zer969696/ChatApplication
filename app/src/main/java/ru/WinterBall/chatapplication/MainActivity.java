@@ -17,7 +17,7 @@ public class MainActivity extends Activity {
     }
 
 
-         /*              EvTest             */
+         /*              PavTest             */
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
