@@ -2,16 +2,13 @@ package ru.WinterBall.chatapplication;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.text.DateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 
 public class MainActivity extends Activity {
@@ -25,15 +22,11 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toast.makeText(this, "hello", Toast.LENGTH_LONG).show();
-        chat = (TextView)findViewById(R.id.textView);
-        message = (EditText)findViewById(R.id.editText);
+        chat = (TextView)findViewById(R.id.textViewChat);
+        message = (EditText)findViewById(R.id.editTextMessage);
 
-        chat.setText("");
         count = 0;
     }
-
-
-         /*              PavTest             */
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -47,14 +40,24 @@ public class MainActivity extends Activity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_about:
+                Toast.makeText(this, "selected about", Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.action_settings:
+                Toast.makeText(this, "selected settings", Toast.LENGTH_LONG).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     public void sendButtonClick(View view) {
+
+        if (chat.getGravity() == Gravity.CENTER) {
+            chat.setGravity(Gravity.NO_GRAVITY);
+        }
+
         chat.append(++count + ": " + message.getText() + "\r\n");
         message.setText("");
         message.requestFocus();
