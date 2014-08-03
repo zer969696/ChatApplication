@@ -3,11 +3,13 @@ package ru.WinterBall.chatapplication;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +26,11 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         chat = (TextView)findViewById(R.id.textViewChat);
+        chat.setMovementMethod(new ScrollingMovementMethod());
         message = (EditText)findViewById(R.id.editTextMessage);
+
+        Intent test = new Intent(this, SettingsActivity.class);
+        startActivity(test);
 
         count = 0;
     }
