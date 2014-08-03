@@ -1,6 +1,7 @@
 package ru.WinterBall.chatapplication;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
@@ -21,7 +22,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toast.makeText(this, "hello", Toast.LENGTH_LONG).show();
+
         chat = (TextView)findViewById(R.id.textViewChat);
         message = (EditText)findViewById(R.id.editTextMessage);
 
@@ -42,7 +43,8 @@ public class MainActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case R.id.action_about:
-                Toast.makeText(this, "selected about", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(this, AboutActivity.class);
+                startActivity(intent);
                 return true;
             case R.id.action_settings:
                 Toast.makeText(this, "selected settings", Toast.LENGTH_LONG).show();

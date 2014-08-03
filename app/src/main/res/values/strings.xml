@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">ChatApplication</string>
+    <string name="about_title">About</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="action_about">About program</string>
@@ -9,5 +10,7 @@
     <string name="textView_text">New Text</string>
     <string name="message_hint">Enter your message</string>
     <string name="chat_hint">Chat will be there…</string>
+
+    <string name="about_info">by benzoback and PavBox</string>
 
 </resources>
