@@ -41,26 +41,21 @@ public class MainActivity extends Activity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        switch (item.getItemId()) {
-            case R.id.action_about:
-                Intent intent = new Intent(this, AboutActivity.class);
-                startActivity(intent);
-                return true;
-            case R.id.action_settings:
-                Toast.makeText(this, "selected settings", Toast.LENGTH_LONG).show();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        return true;
     }
 
     public void sendButtonClick(View view) {
 
-        if (chat.getGravity() == Gravity.CENTER) {
-            chat.setGravity(Gravity.NO_GRAVITY);
+        chat.setHint("");
+        chat.setGravity(Gravity.NO_GRAVITY);
+
+        if (message.getText().toString().replaceAll(" ", "").isEmpty()) {
+            message.setHint("need more letters...");
+        } else {
+            chat.append(++count + ": " + message.getText() + "\r\n");
+            message.setHint("");
         }
 
-        chat.append(++count + ": " + message.getText() + "\r\n");
         message.setText("");
         message.requestFocus();
     }
