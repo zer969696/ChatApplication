@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 
 public class MainActivity extends Activity {
@@ -12,10 +13,11 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toast.makeText(this, "hello", Toast.LENGTH_LONG).show();
     }
 
 
-         /*              EvTest             */
+         /*              PavTest             */
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
