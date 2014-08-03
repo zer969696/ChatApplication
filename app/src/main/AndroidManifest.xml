@@ -23,6 +23,16 @@
             android:theme="@style/AppTheme" >
         </activity>
 
+        <activity android:name=".LoginActivity"
+            android:label="@string/login_title"
+            android:theme="@style/AppTheme" >
+        </activity>
+
+        <activity android:name=".AboutActivity"
+            android:label="@string/about_title"
+            android:theme="@style/AppTheme" >
+        </activity>
+
     </application>
 
 </manifest>

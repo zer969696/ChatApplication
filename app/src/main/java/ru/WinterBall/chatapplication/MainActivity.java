@@ -29,8 +29,8 @@ public class MainActivity extends Activity {
         chat.setMovementMethod(new ScrollingMovementMethod());
         message = (EditText)findViewById(R.id.editTextMessage);
 
-        Intent test = new Intent(this, SettingsActivity.class);
-        startActivity(test);
+        Intent getLogin = new Intent(this, LoginActivity.class);
+        startActivityForResult(getLogin, 1337);
 
         count = 0;
     }
@@ -47,7 +47,24 @@ public class MainActivity extends Activity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        return true;
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+
+                Intent settingsOpen = new Intent(this, SettingsActivity.class);
+                startActivity(settingsOpen);
+
+                return true;
+
+            case R.id.action_about:
+
+                Intent aboutOpen = new Intent(this, AboutActivity.class);
+                startActivity(aboutOpen);
+
+                return true;
+            
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public void sendButtonClick(View view) {
