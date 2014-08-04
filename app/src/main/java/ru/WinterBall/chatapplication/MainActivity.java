@@ -3,7 +3,10 @@ package ru.WinterBall.chatapplication;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +21,7 @@ public class MainActivity extends Activity {
 
     TextView chat;
     EditText message;
+    String nickname; //здесь хранится ник
     int count;
 
     @Override
@@ -29,10 +33,36 @@ public class MainActivity extends Activity {
         chat.setMovementMethod(new ScrollingMovementMethod());
         message = (EditText)findViewById(R.id.editTextMessage);
 
-        Intent getLogin = new Intent(this, LoginActivity.class);
-        startActivityForResult(getLogin, 1337);
-
+        askLogin(1337);
         count = 0;
+    }
+
+    //
+    protected void askLogin(int code) {
+        Intent getLogin = new Intent(this, LoginActivity.class);
+        startActivityForResult(getLogin, code);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1337) {
+            if (resultCode == RESULT_OK) {
+
+                nickname = data.getStringExtra("login");
+
+                chat.setHint("");
+                chat.setGravity(Gravity.NO_GRAVITY);
+
+                Spanned loginLog = Html.fromHtml("<font color=\"red\"> " + nickname + " вошел в чат </font>");
+                chat.append(loginLog);
+                chat.append("\r\n");
+            } else {
+                System.exit(0);
+            }
+        }
     }
 
     @Override

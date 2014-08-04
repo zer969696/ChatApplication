@@ -34,7 +34,8 @@
         android:layout_toLeftOf="@+id/buttonSend"
         android:layout_toStartOf="@+id/buttonSend"
         android:layout_alignTop="@+id/buttonSend"
-        android:hint="@string/message_hint" />
+        android:hint="@string/message_hint"
+        android:singleLine="true" />
 
     <Button
         android:layout_width="wrap_content"
