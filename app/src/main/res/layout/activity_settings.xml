@@ -31,4 +31,39 @@
         android:layout_marginLeft="29dp"
         android:onClick="onColorSwitch" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/NickNameLabel"
+        android:textAlignment="center"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/buttonChangeNick"
+        android:id="@+id/button_NickChange"
+        android:layout_marginTop="31dp"
+        android:enabled="true"
+        android:clickable="true"
+        android:layout_centerHorizontal="true"
+        android:layout_alignTop="@+id/NickNameLabel"
+        android:onClick="onClick_ChangeNick" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText_NewNick"
+        android:hint="@string/loginHint_text"
+        android:singleLine="true"
+        android:maxLength="11"
+        android:gravity="center"
+        android:enabled="true"
+        android:editable="true"
+        android:textAlignment="center"
+        android:visibility="invisible"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>
