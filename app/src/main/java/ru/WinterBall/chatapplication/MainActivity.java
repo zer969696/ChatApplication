@@ -74,25 +74,45 @@ public class MainActivity extends Activity {
         if (requestCode == 12){
             if (resultCode == RESULT_OK) {
 
-            } else {
+                String oldNickname = nickname;
 
+                nickname = data.getStringExtra("nick");
+                userColor = data.getExtras().getInt("color");
+
+                createMessage(oldNickname, nickname, TYPE_SYSTEM);
+            } else {
+                Toast.makeText(this, "Изменения не сохранены", Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    protected void createMessage(String one, String two, int type) {
+
+        if (type == TYPE_SYSTEM) {
+
+            String userChangeNick = "system: " + one + " теперь: " + two;
+
+            SpannableStringBuilder log = new SpannableStringBuilder(userChangeNick);
+            log.setSpan(new ForegroundColorSpan(Color.BLUE), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            log.setSpan(new StyleSpan(Typeface.ITALIC), 6, userChangeNick.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            log.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), userChangeNick.length() - two.length(), userChangeNick.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            chatView.append(log);
+
+            chatView.append("\r\n");
+        }
+
     }
 
     protected void createMessage(String msg, int type) {
 
         if (type == TYPE_SYSTEM) {
-
-            chatView.append("\r\n");
-
             String userOnline = "system: " + nickname + " вошел в чат :)";
 
             SpannableStringBuilder log = new SpannableStringBuilder(userOnline);
             log.setSpan(new ForegroundColorSpan(Color.BLUE), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             log.setSpan(new StyleSpan(Typeface.ITALIC), 6, userOnline.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             chatView.append(log);
-
+            //test
             chatView.append("\r\n");
         }
 
@@ -136,7 +156,7 @@ public class MainActivity extends Activity {
                 startActivity(aboutOpen);
 
                 break;
-            
+
             default:
                 return super.onOptionsItemSelected(item);
         }
