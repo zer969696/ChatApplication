@@ -17,6 +17,7 @@
     <string name="settings_title">Settings</string>
     <string name="action_settings">Settings</string>
     <string name="switchNightMode_text">Включить ночной режим</string>
+    <string name="buttonChangeNick">Изменить</string>
 
     <string name="login_title">Login</string>
     <string name="buttonLogin_text">Войти</string>
