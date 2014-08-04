@@ -9,13 +9,26 @@
     tools:context=".SettingsActivity">
 
 
-    <Switch
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/switchNightMode_text"
-        android:id="@+id/switch1"
-        android:checked="false"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/settings_color"
+        android:id="@+id/textViewUserColor"
+        android:layout_marginLeft="86dp"
+        android:layout_marginTop="30dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButtonColor"
+        android:layout_toEndOf="@+id/textViewUserColor"
+        android:layout_alignBottom="@+id/textViewUserColor"
+        android:layout_toRightOf="@+id/textViewUserColor"
+        android:layout_marginLeft="29dp"
+        android:onClick="onColorSwitch" />
 
 </RelativeLayout>

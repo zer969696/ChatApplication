@@ -70,6 +70,14 @@ public class MainActivity extends Activity {
                 System.exit(0);
             }
         }
+
+        if (requestCode == 12){
+            if (resultCode == RESULT_OK) {
+
+            } else {
+
+            }
+        }
     }
 
     protected void createMessage(String msg, int type) {
@@ -82,7 +90,7 @@ public class MainActivity extends Activity {
 
             SpannableStringBuilder log = new SpannableStringBuilder(userOnline);
             log.setSpan(new ForegroundColorSpan(Color.BLUE), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            log.setSpan(new StyleSpan(Typeface.ITALIC), 6, userOnline.length() - 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            log.setSpan(new StyleSpan(Typeface.ITALIC), 6, userOnline.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             chatView.append(log);
 
             chatView.append("\r\n");
@@ -114,20 +122,26 @@ public class MainActivity extends Activity {
             case R.id.action_settings:
 
                 Intent settingsOpen = new Intent(this, SettingsActivity.class);
-                startActivity(settingsOpen);
 
-                return true;
+                settingsOpen.putExtra("userColor", userColor);
+                settingsOpen.putExtra("nickname", nickname);
+
+                startActivityForResult(settingsOpen, 12);
+
+                break;
 
             case R.id.action_about:
 
                 Intent aboutOpen = new Intent(this, AboutActivity.class);
                 startActivity(aboutOpen);
 
-                return true;
+                break;
             
             default:
                 return super.onOptionsItemSelected(item);
         }
+
+        return true;
     }
 
     public void sendButtonClick(View view) {

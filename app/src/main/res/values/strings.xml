@@ -14,8 +14,6 @@
     <string name="about_benz">benzoback</string>
     <string name="about_pav">PavBox</string>
 
-
-
     <string name="settings_title">Settings</string>
     <string name="action_settings">Settings</string>
     <string name="switchNightMode_text">Включить ночной режим</string>
@@ -25,5 +23,7 @@
     <string name="welcomeTextView_text">Добро пожаловать</string>
     <string name="loginHint_text">Enter your login here</string>
     <string name="about_email">https://github.com/WinterBall</string>
+    <string name="settings_colors">Выберите цвет</string>
+    <string name="settings_color">Цвет ника</string>
 
 </resources>
