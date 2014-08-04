@@ -34,7 +34,6 @@ public class MainActivity extends Activity {
         message = (EditText)findViewById(R.id.editTextMessage);
 
         askLogin(1337);
-        count = 0;
     }
 
     //
@@ -105,7 +104,7 @@ public class MainActivity extends Activity {
         if (message.getText().toString().replaceAll(" ", "").isEmpty()) {
             message.setHint("need more letters...");
         } else {
-            chat.append(++count + ": " + message.getText() + "\r\n");
+            chat.append(nickname + ": " + message.getText() + "\r\n");
             message.setHint("");
         }
 
