@@ -16,10 +16,16 @@ public class LoginActivity extends Activity {
 
     public void onLoginButtonClick(View view) {
 
-        Intent loginAnswer = new Intent();
-        loginAnswer.putExtra("login", ((EditText)findViewById(R.id.editLogin)).getText().toString());
+        EditText editLogin = (EditText) findViewById(R.id.editLogin);
 
-        setResult(RESULT_OK, loginAnswer);
-        finish();
+        if (editLogin.getText().toString().replaceAll(" ", "").isEmpty()) {
+            editLogin.setHint("need more letters...");
+            editLogin.setText("");
+        } else {
+            Intent loginAnswer = new Intent();
+            loginAnswer.putExtra("login", ((EditText) findViewById(R.id.editLogin)).getText().toString());
+            setResult(RESULT_OK, loginAnswer);
+            finish();
+        }
     }
 }
