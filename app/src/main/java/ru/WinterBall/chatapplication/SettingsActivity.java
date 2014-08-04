@@ -24,6 +24,9 @@ public class SettingsActivity extends Activity {
     final int redImg = R.drawable.red;
     final int greenImg = R.drawable.green;
     final int blueImg = R.drawable.blue;
+    final int magentaImg = R.drawable.magenta;
+
+
 
     TextView NickNameLabel;
     EditText editNewNickname;
@@ -43,7 +46,7 @@ public class SettingsActivity extends Activity {
 
         buttonSelect = (ImageButton)findViewById(R.id.imageButtonColor);
 
-        NickNameLabel.setText("Ваш Никнейм: "+newNickname.toString());
+        NickNameLabel.setText("Ваш Никнейм: "+ newNickname);
 
         switch (newColor) {
             case Color.RED:
@@ -57,6 +60,10 @@ public class SettingsActivity extends Activity {
             case Color.BLUE:
                 buttonSelect.setBackgroundResource(blueImg);
                 buttonSelect.setTag(blueImg);
+                break;
+            case Color.MAGENTA:
+                buttonSelect.setBackgroundResource(magentaImg);
+                buttonSelect.setTag(magentaImg);
                 break;
         }
 
@@ -79,6 +86,13 @@ public class SettingsActivity extends Activity {
             return;
         }
         if (buttonSelect.getTag().equals(blueImg)) {
+            buttonSelect.setBackgroundResource(magentaImg);
+            buttonSelect.setTag(magentaImg);
+            newColor = Color.MAGENTA;
+
+            return;
+        }
+        if (buttonSelect.getTag().equals(magentaImg)) {
             buttonSelect.setBackgroundResource(redImg);
             buttonSelect.setTag(redImg);
             newColor = Color.RED;

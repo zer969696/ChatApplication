@@ -79,7 +79,9 @@ public class MainActivity extends Activity {
                 nickname = data.getStringExtra("nick");
                 userColor = data.getExtras().getInt("color");
 
-                createMessage(oldNickname, nickname, TYPE_SYSTEM);
+                if (!oldNickname.equals(nickname)) {
+                    createMessage(oldNickname, nickname, TYPE_SYSTEM);
+                }
             } else {
                 Toast.makeText(this, "Изменения не сохранены", Toast.LENGTH_LONG).show();
             }
@@ -93,7 +95,7 @@ public class MainActivity extends Activity {
             String userChangeNick = "system: " + one + " теперь: " + two;
 
             SpannableStringBuilder log = new SpannableStringBuilder(userChangeNick);
-            log.setSpan(new ForegroundColorSpan(Color.BLUE), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            log.setSpan(new ForegroundColorSpan(Color.CYAN), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             log.setSpan(new StyleSpan(Typeface.ITALIC), 6, userChangeNick.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             log.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), userChangeNick.length() - two.length(), userChangeNick.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             chatView.append(log);
@@ -109,7 +111,7 @@ public class MainActivity extends Activity {
             String userOnline = "system: " + nickname + " вошел в чат :)";
 
             SpannableStringBuilder log = new SpannableStringBuilder(userOnline);
-            log.setSpan(new ForegroundColorSpan(Color.BLUE), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            log.setSpan(new ForegroundColorSpan(Color.CYAN), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             log.setSpan(new StyleSpan(Typeface.ITALIC), 6, userOnline.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             chatView.append(log);
             //test
