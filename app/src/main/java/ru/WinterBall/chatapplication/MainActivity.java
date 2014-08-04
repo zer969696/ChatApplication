@@ -75,6 +75,7 @@ public class MainActivity extends Activity {
             if (resultCode == RESULT_OK) {
 
                 String oldNickname = nickname;
+                //TEST
 
                 nickname = data.getStringExtra("nick");
                 userColor = data.getExtras().getInt("color");
