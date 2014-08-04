@@ -26,5 +26,6 @@
     <string name="about_email">https://github.com/WinterBall</string>
     <string name="settings_colors">Выберите цвет</string>
     <string name="settings_color">Цвет ника</string>
+    <string name="buttonSettingsSave_text">Сохранить</string>
 
 </resources>
