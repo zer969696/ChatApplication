@@ -20,7 +20,9 @@
         android:layout_alignRight="@+id/buttonSend"
         android:layout_alignEnd="@+id/buttonSend"
         android:hint="@string/chat_hint"
-        android:gravity="center" />
+        android:gravity="center"
+        android:maxLines="2147483647"
+        android:scrollbars="vertical"/>
 
     <EditText
         android:layout_width="wrap_content"
@@ -32,7 +34,8 @@
         android:layout_toLeftOf="@+id/buttonSend"
         android:layout_toStartOf="@+id/buttonSend"
         android:layout_alignTop="@+id/buttonSend"
-        android:hint="@string/message_hint" />
+        android:hint="@string/message_hint"
+        android:singleLine="true" />
 
     <Button
         android:layout_width="wrap_content"
