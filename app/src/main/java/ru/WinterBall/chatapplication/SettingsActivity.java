@@ -4,11 +4,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class SettingsActivity extends Activity {
@@ -17,29 +21,60 @@ public class SettingsActivity extends Activity {
     private static boolean NICKNAME_CHANGE = false;
     String newNickname;
     ImageButton buttonSelect;
+    boolean isNightMode;
 
     final int redImg = R.drawable.red;
     final int greenImg = R.drawable.green;
     final int blueImg = R.drawable.blue;
     final int magentaImg = R.drawable.magenta;
 
-    TextView NickNameLabel;
+    TextView NickNameLabel, switchTextView;
     EditText editNewNickname;
     Button btnChangeNick;
+    Switch themeSwitch;
+
+    private int newThemeId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        newThemeId = getIntent().getExtras().getInt("theme");
+        setTheme(newThemeId);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
         newColor = getIntent().getExtras().getInt("userColor");
         newNickname = getIntent().getExtras().getString("nickname");
+        isNightMode = getIntent().getExtras().getBoolean("isSwitched");
 
         NickNameLabel = (TextView) findViewById(R.id.NickNameLabel);
         editNewNickname = (EditText) findViewById(R.id.editText_NewNick);
 
         btnChangeNick = (Button) findViewById(R.id.button_NickChange);
         buttonSelect = (ImageButton)findViewById(R.id.imageButtonColor);
+
+        switchTextView = (TextView)findViewById(R.id.textViewSwtich);
+        themeSwitch = (Switch)findViewById(R.id.switchTheme);
+        if (isNightMode) {
+            themeSwitch.setChecked(true);
+            switchTextView.setText("Выключить ночной режим");
+        }
+        themeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    switchTextView.setText("Выключить ночной режим");
+                    reloadTheme(false);
+                    isNightMode = true;
+                } else {
+                    switchTextView.setText("Включить ночной режим");
+                    reloadTheme(true);
+                    isNightMode = false;
+                }
+            }
+        });
 
         NickNameLabel.setText("Ваш Никнейм: "+ newNickname);
 
@@ -123,5 +158,24 @@ public class SettingsActivity extends Activity {
 
         setResult(RESULT_OK, answer);
         finish();
+    }
+
+    public void reloadTheme(boolean test) {
+
+        Intent intent = getIntent();
+        intent.putExtra("userColor", newColor);
+        intent.putExtra("nickname", newNickname);
+        intent.putExtra("isSwitched", isNightMode);
+
+        if (test) {
+            intent.putExtra("theme", R.style.AppTheme);
+        } else {
+            intent.putExtra("theme", R.style.HoloDark);
+        }
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        finish();
+        startActivity(intent);
+
     }
 }

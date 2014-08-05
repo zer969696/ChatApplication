@@ -2,15 +2,18 @@ package ru.WinterBall.chatapplication;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,9 +22,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Method;
+
 
 public class MainActivity extends Activity {
 
+    private int themeId = R.style.AppTheme;
     TextView chatView;
     EditText message;
     String nickname;
@@ -32,6 +38,13 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+       // int themeId = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                //.getInt("themeId", DEFAULT_THEME_ID);
+
+        setTheme(themeId);
+
+        
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -137,6 +150,16 @@ public class MainActivity extends Activity {
 
                 settingsOpen.putExtra("userColor", userColor);
                 settingsOpen.putExtra("nickname", nickname);
+                settingsOpen.putExtra("theme", getThemeID());
+
+
+                /*
+                if (getThemeID() == R.style.HoloDark) {
+                    settingsOpen.putExtra("theme", true);
+                } else {
+                    settingsOpen.putExtra("theme", false);
+                }
+                */
                 startActivityForResult(settingsOpen, 12);
                 break;
 
@@ -166,6 +189,20 @@ public class MainActivity extends Activity {
 
         message.setText("");
         message.requestFocus();
+    }
+
+    //from stackoverflow
+    public int getThemeID() {
+
+        int themeResId = 0;
+        try {
+            Class<?> clazz = ContextThemeWrapper.class;
+            Method method = clazz.getMethod("getThemeResId");
+            method.setAccessible(true);
+            themeResId = (Integer) method.invoke(this);
+        } catch (Exception ex) {}
+
+        return themeResId;
     }
 }
 
