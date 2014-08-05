@@ -5,20 +5,17 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +24,7 @@ public class MainActivity extends Activity {
 
     TextView chatView;
     EditText message;
-    String nickname; //здесь хранится ник
+    String nickname;
     int userColor = Color.RED;
 
     public static final int TYPE_SYSTEM = 0;
@@ -45,7 +42,7 @@ public class MainActivity extends Activity {
         askLogin(1337);
     }
 
-    //
+
     protected void askLogin(int code) {
         Intent getLogin = new Intent(this, LoginActivity.class);
         startActivityForResult(getLogin, code);
@@ -75,7 +72,6 @@ public class MainActivity extends Activity {
             if (resultCode == RESULT_OK) {
 
                 String oldNickname = nickname;
-                //TEST
 
                 nickname = data.getStringExtra("nick");
                 userColor = data.getExtras().getInt("color");
@@ -100,7 +96,6 @@ public class MainActivity extends Activity {
             log.setSpan(new StyleSpan(Typeface.ITALIC), 6, userChangeNick.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             log.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), userChangeNick.length() - two.length(), userChangeNick.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             chatView.append(log);
-
             chatView.append("\r\n");
         }
 
@@ -115,7 +110,6 @@ public class MainActivity extends Activity {
             log.setSpan(new ForegroundColorSpan(Color.CYAN), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             log.setSpan(new StyleSpan(Typeface.ITALIC), 6, userOnline.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             chatView.append(log);
-            //test
             chatView.append("\r\n");
         }
 
@@ -124,23 +118,18 @@ public class MainActivity extends Activity {
             SpannableStringBuilder userPrefix = new SpannableStringBuilder(nickname);
             userPrefix.setSpan(new ForegroundColorSpan(userColor), 0, nickname.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             chatView.append(userPrefix);
-
             chatView.append(": " + msg +"\r\n");
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case R.id.action_settings:
 
@@ -148,22 +137,18 @@ public class MainActivity extends Activity {
 
                 settingsOpen.putExtra("userColor", userColor);
                 settingsOpen.putExtra("nickname", nickname);
-
                 startActivityForResult(settingsOpen, 12);
-
                 break;
 
             case R.id.action_about:
 
                 Intent aboutOpen = new Intent(this, AboutActivity.class);
                 startActivity(aboutOpen);
-
                 break;
 
             default:
                 return super.onOptionsItemSelected(item);
         }
-
         return true;
     }
 
