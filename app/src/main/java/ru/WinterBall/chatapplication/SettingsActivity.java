@@ -21,7 +21,6 @@ public class SettingsActivity extends Activity {
     private static boolean NICKNAME_CHANGE = false;
     String newNickname;
     ImageButton buttonSelect;
-    boolean isNightMode;
 
     final int redImg = R.drawable.red;
     final int greenImg = R.drawable.green;
@@ -39,6 +38,7 @@ public class SettingsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        //устанавливаем тему из мейн окна или после обновления
         newThemeId = getIntent().getExtras().getInt("theme");
         setTheme(newThemeId);
 
@@ -47,7 +47,6 @@ public class SettingsActivity extends Activity {
 
         newColor = getIntent().getExtras().getInt("userColor");
         newNickname = getIntent().getExtras().getString("nickname");
-        isNightMode = getIntent().getExtras().getBoolean("isSwitched");
 
         NickNameLabel = (TextView) findViewById(R.id.NickNameLabel);
         editNewNickname = (EditText) findViewById(R.id.editText_NewNick);
@@ -57,21 +56,19 @@ public class SettingsActivity extends Activity {
 
         switchTextView = (TextView)findViewById(R.id.textViewSwtich);
         themeSwitch = (Switch)findViewById(R.id.switchTheme);
-        if (isNightMode) {
+        //если включен ночной режим(при переходе с мейна) то ставим тумблеры как надо!
+        if (newThemeId == R.style.HoloDark) {
             themeSwitch.setChecked(true);
             switchTextView.setText("Выключить ночной режим");
         }
+        //слушатель для изменения тублера и темы(вызов перезагрузки)
         themeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    switchTextView.setText("Выключить ночной режим");
                     reloadTheme(false);
-                    isNightMode = true;
                 } else {
-                    switchTextView.setText("Включить ночной режим");
                     reloadTheme(true);
-                    isNightMode = false;
                 }
             }
         });
@@ -149,33 +146,40 @@ public class SettingsActivity extends Activity {
         }
     }
 
+    // сохранение всего
     public void saveAllButton(View view) {
 
         Intent answer = new Intent();
 
         answer.putExtra("nick", newNickname);
         answer.putExtra("color", newColor);
+        answer.putExtra("theme", newThemeId);
 
         setResult(RESULT_OK, answer);
         finish();
     }
 
-    public void reloadTheme(boolean test) {
+    //функция обновления темы
+    public void reloadTheme(boolean isActivated) {
 
+        //передача информации "обновленной" активности
         Intent intent = getIntent();
         intent.putExtra("userColor", newColor);
         intent.putExtra("nickname", newNickname);
-        intent.putExtra("isSwitched", isNightMode);
 
-        if (test) {
+        // если isActivated(включен ли ночной режим) == true, то посылаем противоположную тему
+        if (isActivated) {
             intent.putExtra("theme", R.style.AppTheme);
         } else {
             intent.putExtra("theme", R.style.HoloDark);
         }
 
+        //переход без анимации
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         finish();
-        startActivity(intent);
 
+        //еще одно отключение анимации (stackoverflow)
+        overridePendingTransition(0, 0);
+        startActivity(intent);
     }
 }

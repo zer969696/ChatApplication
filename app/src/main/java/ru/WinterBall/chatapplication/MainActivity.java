@@ -39,12 +39,11 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-       // int themeId = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                //.getInt("themeId", DEFAULT_THEME_ID);
-
+        if (isChild()) {
+            themeId = getIntent().getExtras().getInt("theme");
+        }
         setTheme(themeId);
 
-        
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -88,12 +87,15 @@ public class MainActivity extends Activity {
 
                 nickname = data.getStringExtra("nick");
                 userColor = data.getExtras().getInt("color");
+                themeId = data.getExtras().getInt("theme");
 
                 if (!oldNickname.equals(nickname)) {
                     createMessage(oldNickname, nickname, TYPE_SYSTEM);
                 }
+
+                reloadTheme(themeId);
             } else {
-                Toast.makeText(this, "Изменения не сохранены", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, data.getStringExtra("nick"), Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -203,6 +205,23 @@ public class MainActivity extends Activity {
         } catch (Exception ex) {}
 
         return themeResId;
+    }
+
+    //функция обновления темы
+    public void reloadTheme(int newThemeId) {
+
+        //передача информации "обновленной" активности
+        Intent intent = getIntent();
+
+        intent.putExtra("theme", newThemeId);
+
+        //переход без анимации
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        finish();
+
+        //еще одно отключение анимации (stackoverflow)
+        overridePendingTransition(0, 0);
+        startActivity(intent);
     }
 }
 
