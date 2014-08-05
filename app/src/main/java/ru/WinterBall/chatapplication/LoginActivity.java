@@ -23,7 +23,7 @@ public class LoginActivity extends Activity {
             editLogin.setText("");
         } else {
             Intent loginAnswer = new Intent();
-            loginAnswer.putExtra("login", ((EditText) findViewById(R.id.editLogin)).getText().toString());
+            loginAnswer.putExtra("login", editLogin.getText().toString());
             setResult(RESULT_OK, loginAnswer);
             finish();
         }

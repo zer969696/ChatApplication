@@ -23,8 +23,6 @@ public class SettingsActivity extends Activity {
     final int blueImg = R.drawable.blue;
     final int magentaImg = R.drawable.magenta;
 
-
-
     TextView NickNameLabel;
     EditText editNewNickname;
     Button btnChangeNick;
@@ -38,9 +36,9 @@ public class SettingsActivity extends Activity {
         newNickname = getIntent().getExtras().getString("nickname");
 
         NickNameLabel = (TextView) findViewById(R.id.NickNameLabel);
-        btnChangeNick = (Button) findViewById(R.id.button_NickChange);
         editNewNickname = (EditText) findViewById(R.id.editText_NewNick);
 
+        btnChangeNick = (Button) findViewById(R.id.button_NickChange);
         buttonSelect = (ImageButton)findViewById(R.id.imageButtonColor);
 
         NickNameLabel.setText("Ваш Никнейм: "+ newNickname);
@@ -63,7 +61,6 @@ public class SettingsActivity extends Activity {
                 buttonSelect.setTag(magentaImg);
                 break;
         }
-
     }
 
     public void onColorSwitch(View view) {
@@ -102,22 +99,18 @@ public class SettingsActivity extends Activity {
     public void onClick_ChangeNick(View view) {
         if (!NICKNAME_CHANGE) {
             NICKNAME_CHANGE = true;
-
             NickNameLabel.setVisibility(view.INVISIBLE);
             editNewNickname.setVisibility(view.VISIBLE);
-            btnChangeNick.setText("Выполнить");
 
+            btnChangeNick.setText("Выполнить");
         } else {
             NICKNAME_CHANGE = false;
-
             editNewNickname.setVisibility(view.INVISIBLE);
             NickNameLabel.setVisibility(view.VISIBLE);
 
             newNickname = editNewNickname.getText().toString();
             NickNameLabel.setText("Ваш Никнейм: "+newNickname);
             btnChangeNick.setText("Изменить");
-
-
         }
     }
 
