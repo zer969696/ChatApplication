@@ -103,6 +103,7 @@ public class MainActivity extends Activity {
 
             } else {
                 System.exit(0);
+                //kapusta
             }
         }
 
