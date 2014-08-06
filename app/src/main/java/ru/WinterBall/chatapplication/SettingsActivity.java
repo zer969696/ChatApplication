@@ -64,7 +64,6 @@ public class SettingsActivity extends Activity {
         //если включен ночной режим(при переходе с мейна или пересоздании) то ставим тумблеры как надо!
         if (newThemeId == R.style.HoloDark) {
             themeSwitch.setChecked(true);
-            switchTextView.setText("Выключить ночной режим");
         }
 
         //устанавливаем никнейм для изменения
@@ -164,7 +163,6 @@ public class SettingsActivity extends Activity {
 
         setResult(RESULT_OK, answer);
         finish();
-
     }
 
     //метод определяющий текущее положение тублера и вызывающий перезагрузку активности(aga)
