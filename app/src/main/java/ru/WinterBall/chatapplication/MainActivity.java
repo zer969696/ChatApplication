@@ -2,15 +2,18 @@ package ru.WinterBall.chatapplication;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,9 +22,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Method;
+
 
 public class MainActivity extends Activity {
 
+    private int themeId = R.style.AppTheme;
     TextView chatView;
     EditText message;
     String nickname;
@@ -32,6 +38,16 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //если было пересоздание активности
+        if (savedInstanceState != null) {
+            themeId = savedInstanceState.getInt("theme");
+            nickname = savedInstanceState.getString("nick");
+            userColor = savedInstanceState.getInt("col");
+        }
+
+        setTheme(themeId);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -39,9 +55,31 @@ public class MainActivity extends Activity {
         chatView.setMovementMethod(new ScrollingMovementMethod());
         message = (EditText)findViewById(R.id.editTextMessage);
 
-        askLogin(1337);
+        //если это первый вход в приложение
+        if (savedInstanceState == null) {
+            askLogin(1337);
+        }
     }
 
+    //при перезагрузке активности посылаем текущии данные для сохранения
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+
+        outState.putCharSequence("chat", chatView.getText());
+        outState.putInt("theme", themeId);
+        outState.putString("nick", nickname);
+        outState.putInt("col", userColor);
+
+        super.onSaveInstanceState(outState);
+    }
+
+    //воостанавливаем чат
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        chatView.setText(savedInstanceState.getCharSequence("chat"));
+    }
 
     protected void askLogin(int code) {
         Intent getLogin = new Intent(this, LoginActivity.class);
@@ -72,15 +110,21 @@ public class MainActivity extends Activity {
             if (resultCode == RESULT_OK) {
 
                 String oldNickname = nickname;
+                int oldThemeId = getThemeID();
 
                 nickname = data.getStringExtra("nick");
                 userColor = data.getExtras().getInt("color");
+                themeId = data.getExtras().getInt("theme");
 
                 if (!oldNickname.equals(nickname)) {
                     createMessage(oldNickname, nickname, TYPE_SYSTEM);
                 }
+
+                if (themeId != oldThemeId) {
+                    this.recreate();
+                }
             } else {
-                Toast.makeText(this, "Изменения не сохранены", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Изменения не были сохранены", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -137,6 +181,8 @@ public class MainActivity extends Activity {
 
                 settingsOpen.putExtra("userColor", userColor);
                 settingsOpen.putExtra("nickname", nickname);
+                settingsOpen.putExtra("theme", getThemeID());
+
                 startActivityForResult(settingsOpen, 12);
                 break;
 
@@ -154,9 +200,6 @@ public class MainActivity extends Activity {
 
     public void sendButtonClick(View view) {
 
-        chatView.setHint("");
-        chatView.setGravity(Gravity.NO_GRAVITY);
-
         if (message.getText().toString().replaceAll(" ", "").isEmpty()) {
             message.setHint("need more letters...");
         } else {
@@ -166,6 +209,20 @@ public class MainActivity extends Activity {
 
         message.setText("");
         message.requestFocus();
+    }
+
+    //from stackoverflow (получаем айди текущей темы)
+    public int getThemeID() {
+
+        int themeResId = 0;
+        try {
+            Class<?> clazz = ContextThemeWrapper.class;
+            Method method = clazz.getMethod("getThemeResId");
+            method.setAccessible(true);
+            themeResId = (Integer) method.invoke(this);
+        } catch (Exception ex) {}
+
+        return themeResId;
     }
 }
 
