@@ -109,7 +109,8 @@ public class MainActivity extends Activity {
                 chatView.setGravity(Gravity.NO_GRAVITY);
                 createMessage("log", TYPE_SYSTEM);
             } else {
-                System.exit(0);
+                //если пользователь при вводе логина нажал назад
+                this.finish();
             }
         }
 
