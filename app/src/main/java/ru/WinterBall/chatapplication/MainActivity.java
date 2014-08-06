@@ -39,9 +39,13 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        if (isChild()) {
-            themeId = getIntent().getExtras().getInt("theme");
+        //если было пересоздание активности
+        if (savedInstanceState != null) {
+            themeId = savedInstanceState.getInt("theme");
+            nickname = savedInstanceState.getString("nick");
+            userColor = savedInstanceState.getInt("col");
         }
+
         setTheme(themeId);
 
         super.onCreate(savedInstanceState);
@@ -51,9 +55,31 @@ public class MainActivity extends Activity {
         chatView.setMovementMethod(new ScrollingMovementMethod());
         message = (EditText)findViewById(R.id.editTextMessage);
 
-        askLogin(1337);
+        //если это первый вход в приложение
+        if (savedInstanceState == null) {
+            askLogin(1337);
+        }
     }
 
+    //при перезагрузке активности посылаем текущии данные для сохранения
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+
+        outState.putCharSequence("chat", chatView.getText());
+        outState.putInt("theme", themeId);
+        outState.putString("nick", nickname);
+        outState.putInt("col", userColor);
+
+        super.onSaveInstanceState(outState);
+    }
+
+    //воостанавливаем чат
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        chatView.setText(savedInstanceState.getCharSequence("chat"));
+    }
 
     protected void askLogin(int code) {
         Intent getLogin = new Intent(this, LoginActivity.class);
@@ -84,6 +110,7 @@ public class MainActivity extends Activity {
             if (resultCode == RESULT_OK) {
 
                 String oldNickname = nickname;
+                int oldThemeId = getThemeID();
 
                 nickname = data.getStringExtra("nick");
                 userColor = data.getExtras().getInt("color");
@@ -93,9 +120,11 @@ public class MainActivity extends Activity {
                     createMessage(oldNickname, nickname, TYPE_SYSTEM);
                 }
 
-                reloadTheme(themeId);
+                if (themeId != oldThemeId) {
+                    this.recreate();
+                }
             } else {
-                Toast.makeText(this, data.getStringExtra("nick"), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Изменения не были сохранены", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -154,14 +183,6 @@ public class MainActivity extends Activity {
                 settingsOpen.putExtra("nickname", nickname);
                 settingsOpen.putExtra("theme", getThemeID());
 
-
-                /*
-                if (getThemeID() == R.style.HoloDark) {
-                    settingsOpen.putExtra("theme", true);
-                } else {
-                    settingsOpen.putExtra("theme", false);
-                }
-                */
                 startActivityForResult(settingsOpen, 12);
                 break;
 
@@ -179,9 +200,6 @@ public class MainActivity extends Activity {
 
     public void sendButtonClick(View view) {
 
-        chatView.setHint("");
-        chatView.setGravity(Gravity.NO_GRAVITY);
-
         if (message.getText().toString().replaceAll(" ", "").isEmpty()) {
             message.setHint("need more letters...");
         } else {
@@ -193,7 +211,7 @@ public class MainActivity extends Activity {
         message.requestFocus();
     }
 
-    //from stackoverflow
+    //from stackoverflow (получаем айди текущей темы)
     public int getThemeID() {
 
         int themeResId = 0;
@@ -205,23 +223,6 @@ public class MainActivity extends Activity {
         } catch (Exception ex) {}
 
         return themeResId;
-    }
-
-    //функция обновления темы
-    public void reloadTheme(int newThemeId) {
-
-        //передача информации "обновленной" активности
-        Intent intent = getIntent();
-
-        intent.putExtra("theme", newThemeId);
-
-        //переход без анимации
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        finish();
-
-        //еще одно отключение анимации (stackoverflow)
-        overridePendingTransition(0, 0);
-        startActivity(intent);
     }
 }
 

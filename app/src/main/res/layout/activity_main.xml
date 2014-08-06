@@ -20,8 +20,6 @@
         android:layout_above="@+id/editTextMessage"
         android:layout_alignRight="@+id/buttonSend"
         android:layout_alignEnd="@+id/buttonSend"
-        android:hint="@string/chat_hint"
-        android:gravity="center"
         android:maxLines="2147483647"
         android:scrollbars="vertical"
         android:textIsSelectable="false" />
