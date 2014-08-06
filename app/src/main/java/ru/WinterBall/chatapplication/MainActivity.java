@@ -2,18 +2,15 @@ package ru.WinterBall.chatapplication;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,11 +20,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.reflect.Method;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.sql.Struct;
 
 
 public class MainActivity extends Activity {
 
     private int themeId = R.style.AppTheme;
+    Socket ClientSocket;
+
+
     TextView chatView;
     EditText message;
     String nickname;
@@ -35,6 +40,9 @@ public class MainActivity extends Activity {
 
     public static final int TYPE_SYSTEM = 0;
     public static final int TYPE_USER = 1;
+    public static final int SERVER_PORT = 16212;
+    //public static final String SERVER_ADRESS = "10.0.2.2";  // emulator IP
+    public static final String SERVER_ADRESS = "192.168.0.26"; //Pav PC Ip - for mobile tests
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,12 +103,10 @@ public class MainActivity extends Activity {
             if (resultCode == RESULT_OK) {
 
                 nickname = data.getStringExtra("login");
-
                 chatView.setHint("");
+
                 chatView.setGravity(Gravity.NO_GRAVITY);
-
                 createMessage("log", TYPE_SYSTEM);
-
             } else {
                 System.exit(0);
             }
@@ -198,12 +204,46 @@ public class MainActivity extends Activity {
         return true;
     }
 
+
+    public class Server_thread implements Runnable {
+        String message;
+        Socket ClientSocket;
+
+        public Server_thread(String msg) { message = msg; }
+
+        @Override
+        public void run(){
+            try {
+                ClientSocket = new Socket(InetAddress.getByName(SERVER_ADRESS), SERVER_PORT);
+                ClientSocket.setKeepAlive(false);
+
+                PrintWriter writer = new PrintWriter(ClientSocket.getOutputStream());
+                writer.println(message);
+                writer.flush();
+
+                ClientSocket.close();
+            } catch (UnknownHostException e1) { e1.printStackTrace();
+            } catch (Exception e) { e.printStackTrace(); }
+        }
+    }
+
+
     public void sendButtonClick(View view) {
+
+        chatView.setHint("");
+        chatView.setGravity(Gravity.NO_GRAVITY);
 
         if (message.getText().toString().replaceAll(" ", "").isEmpty()) {
             message.setHint("need more letters...");
         } else {
             createMessage(message.getText().toString(), TYPE_USER);
+
+            try {
+                createMessage("Thread start", TYPE_USER);
+                Thread server_connect = new Thread( new Server_thread( message.getText().toString() ) );
+                server_connect.start();
+            } catch (Exception e) { e.getStackTrace(); }
+
             message.setHint("");
         }
 
