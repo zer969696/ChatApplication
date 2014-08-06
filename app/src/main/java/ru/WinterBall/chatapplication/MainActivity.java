@@ -11,6 +11,7 @@ import android.text.Spanned;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,14 +25,14 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.sql.Struct;
+
 
 
 public class MainActivity extends Activity {
 
     private int themeId = R.style.AppTheme;
-    Socket ClientSocket;
 
+    Socket ClientSocket;
 
     TextView chatView;
     EditText message;
@@ -205,6 +206,7 @@ public class MainActivity extends Activity {
     }
 
 
+
     public class Server_thread implements Runnable {
         String message;
         Socket ClientSocket;
@@ -239,7 +241,6 @@ public class MainActivity extends Activity {
             createMessage(message.getText().toString(), TYPE_USER);
 
             try {
-                createMessage("Thread start", TYPE_USER);
                 Thread server_connect = new Thread( new Server_thread( message.getText().toString() ) );
                 server_connect.start();
             } catch (Exception e) { e.getStackTrace(); }
