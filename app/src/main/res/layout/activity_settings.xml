@@ -15,21 +15,22 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/settings_color"
         android:id="@+id/textViewUserColor"
-        android:layout_marginLeft="86dp"
-        android:layout_marginTop="30dp"
+        android:layout_toStartOf="@+id/NickNameLabel"
+        android:singleLine="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignRight="@+id/textViewSwtich"
+        android:layout_marginTop="20dp" />
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageButtonColor"
-        android:layout_toEndOf="@+id/textViewUserColor"
-        android:layout_alignBottom="@+id/textViewUserColor"
-        android:layout_toRightOf="@+id/textViewUserColor"
-        android:layout_marginLeft="29dp"
-        android:onClick="onColorSwitch" />
+        android:onClick="onColorSwitch"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/switchTheme"
+        android:layout_alignStart="@+id/switchTheme"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="1dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -83,20 +84,19 @@
         android:layout_height="wrap_content"
         android:id="@+id/switchTheme"
         android:checked="false"
-        android:singleLine="true"
-        android:layout_toEndOf="@+id/imageButtonColor"
-        android:layout_marginTop="32dp"
         android:onClick="onClickSwitchTheme"
-        android:layout_below="@+id/imageButtonColor"
-        android:layout_toRightOf="@+id/imageButtonColor" />
+        android:singleLine="true"
+
+        android:layout_marginTop="100dp"
+        android:layout_alignRight="@+id/buttonSaveAll"/>
+
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Включить ночной режим"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/nightMode_text"
         android:id="@+id/textViewSwtich"
-        android:layout_toStartOf="@+id/switchTheme"
         android:layout_alignBottom="@+id/switchTheme"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />

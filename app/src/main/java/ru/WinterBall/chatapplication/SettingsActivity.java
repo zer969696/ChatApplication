@@ -167,7 +167,7 @@ public class SettingsActivity extends Activity {
 
     }
 
-    //метод определяющий текущее положение тублера и вызывающий перезагрузку активности
+    //метод определяющий текущее положение тублера и вызывающий перезагрузку активности(aga)
     public void onClickSwitchTheme(View view) {
 
         if (themeSwitch.isChecked()) {
