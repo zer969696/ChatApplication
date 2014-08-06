@@ -27,5 +27,6 @@
     <string name="settings_colors">Выберите цвет</string>
     <string name="settings_color">Цвет ника</string>
     <string name="buttonSettingsSave_text">Сохранить</string>
+    <string name="nightMode_text">Night mode</string>
 
 </resources>
