@@ -59,6 +59,7 @@ public class MainActivity extends Activity {
         if (savedInstanceState == null) {
             askLogin(1337);
             //test comment
+            //another
         }
     }
 
