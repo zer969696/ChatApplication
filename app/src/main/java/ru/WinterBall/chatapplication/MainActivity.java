@@ -58,6 +58,8 @@ public class MainActivity extends Activity {
         //если это первый вход в приложение
         if (savedInstanceState == null) {
             askLogin(1337);
+            //test comment
+            //another
         }
     }
 
@@ -103,6 +105,8 @@ public class MainActivity extends Activity {
 
             } else {
                 System.exit(0);
+                //kapusta
+                //zhir
             }
         }
 
