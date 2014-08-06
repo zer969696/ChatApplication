@@ -84,9 +84,11 @@
         android:id="@+id/switchTheme"
         android:checked="false"
         android:singleLine="true"
-        android:onClick="onClickSwitchTheme"
-        android:layout_marginTop="100dp"
-        android:layout_alignRight="@+id/buttonSaveAll" />
+        android:layout_toEndOf="@+id/button_NickChange"
+        android:layout_below="@+id/imageButtonColor"
+        android:layout_toRightOf="@+id/button_NickChange"
+        android:layout_marginTop="35dp"
+        android:onClick="onClickSwitchTheme" />
 
     <TextView
         android:layout_width="wrap_content"
