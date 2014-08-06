@@ -33,48 +33,44 @@ public class SettingsActivity extends Activity {
     Switch themeSwitch;
 
     private int newThemeId;
-
+    private boolean isThemeChanged;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        //устанавливаем тему из мейн окна или после обновления
-        newThemeId = getIntent().getExtras().getInt("theme");
+        //если эта активность была перезагружена
+        if (savedInstanceState != null) {
+            newThemeId = savedInstanceState.getInt("current_theme");
+            newColor = savedInstanceState.getInt("current_color");
+            newNickname = savedInstanceState.getString("current_nickname");
+        } else {
+            newThemeId = getIntent().getExtras().getInt("theme");
+            newColor = getIntent().getExtras().getInt("userColor");
+            newNickname = getIntent().getExtras().getString("nickname");
+        }
         setTheme(newThemeId);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        newColor = getIntent().getExtras().getInt("userColor");
-        newNickname = getIntent().getExtras().getString("nickname");
-
+        //рычаги управления
         NickNameLabel = (TextView) findViewById(R.id.NickNameLabel);
         editNewNickname = (EditText) findViewById(R.id.editText_NewNick);
-
         btnChangeNick = (Button) findViewById(R.id.button_NickChange);
         buttonSelect = (ImageButton)findViewById(R.id.imageButtonColor);
-
         switchTextView = (TextView)findViewById(R.id.textViewSwtich);
         themeSwitch = (Switch)findViewById(R.id.switchTheme);
-        //если включен ночной режим(при переходе с мейна) то ставим тумблеры как надо!
+
+        //если включен ночной режим(при переходе с мейна или пересоздании) то ставим тумблеры как надо!
         if (newThemeId == R.style.HoloDark) {
             themeSwitch.setChecked(true);
             switchTextView.setText("Выключить ночной режим");
         }
-        //слушатель для изменения тублера и темы(вызов перезагрузки)
-        themeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    reloadTheme(false);
-                } else {
-                    reloadTheme(true);
-                }
-            }
-        });
 
+        //устанавливаем никнейм для изменения
         NickNameLabel.setText("Ваш Никнейм: "+ newNickname);
 
+        //устанавливаем цвет для изменения
         switch (newColor) {
             case Color.RED:
                 buttonSelect.setBackgroundResource(redImg);
@@ -93,6 +89,17 @@ public class SettingsActivity extends Activity {
                 buttonSelect.setTag(magentaImg);
                 break;
         }
+    }
+
+    //метод для передачи данных после перезапуска активности
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+
+        outState.putInt("current_theme", newThemeId);
+        outState.putInt("current_color", newColor);
+        outState.putString("current_nickname", newNickname);
+
+        super.onSaveInstanceState(outState);
     }
 
     public void onColorSwitch(View view) {
@@ -157,29 +164,18 @@ public class SettingsActivity extends Activity {
 
         setResult(RESULT_OK, answer);
         finish();
+
     }
 
-    //функция обновления темы
-    public void reloadTheme(boolean isActivated) {
+    //метод определяющий текущее положение тублера и вызывающий перезагрузку активности
+    public void onClickSwitchTheme(View view) {
 
-        //передача информации "обновленной" активности
-        Intent intent = getIntent();
-        intent.putExtra("userColor", newColor);
-        intent.putExtra("nickname", newNickname);
-
-        // если isActivated(включен ли ночной режим) == true, то посылаем противоположную тему
-        if (isActivated) {
-            intent.putExtra("theme", R.style.AppTheme);
+        if (themeSwitch.isChecked()) {
+            newThemeId = R.style.HoloDark;
+            this.recreate();
         } else {
-            intent.putExtra("theme", R.style.HoloDark);
+            newThemeId = R.style.AppTheme;
+            this.recreate();
         }
-
-        //переход без анимации
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        finish();
-
-        //еще одно отключение анимации (stackoverflow)
-        overridePendingTransition(0, 0);
-        startActivity(intent);
     }
 }
