@@ -197,6 +197,9 @@ public class MainActivity extends Activity {
             case R.id.action_about:
 
                 Intent aboutOpen = new Intent(this, AboutActivity.class);
+
+                aboutOpen.putExtra("theme", getThemeID());
+
                 startActivity(aboutOpen);
                 break;
 
