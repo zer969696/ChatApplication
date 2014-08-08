@@ -162,17 +162,25 @@ public class SettingsActivity extends Activity {
             editNewNickname.setVisibility(view.VISIBLE);
 
             btnChangeNick.setText("Выполнить");
-
         } else {
-            NICKNAME_CHANGE = false;
-            editNewNickname.setVisibility(view.INVISIBLE);
-            NickNameLabel.setVisibility(view.VISIBLE);
+            newNickname = editNewNickname.getText().toString().replaceAll(" ", "");
 
-            newNickname = editNewNickname.getText().toString();
-            NickNameLabel.setText("Ваш Никнейм: "+newNickname);
-            btnChangeNick.setText("Изменить");
+            if (newNickname.isEmpty()) {
+                editNewNickname.setHint("need more letters...");
+                editNewNickname.setText("");
+            } else {
+                if (newNickname.equals("system")) {
+                    editNewNickname.setError("registred name");
+                } else {
+                    NICKNAME_CHANGE = false;
+                    editNewNickname.setVisibility(view.INVISIBLE);
+                    NickNameLabel.setVisibility(view.VISIBLE);
 
-            setNickColorOnChange(newColor);
+                    //newNickname = editNewNickname.getText().toString();
+                    NickNameLabel.setText("Ваш Никнейм: " + newNickname);
+                    btnChangeNick.setText("Изменить");
+                }
+            }
         }
     }
 

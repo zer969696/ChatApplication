@@ -87,7 +87,9 @@
         android:singleLine="true"
         android:onClick="onClickSwitchTheme"
         android:layout_marginTop="100dp"
-        android:layout_alignRight="@+id/buttonSaveAll" />
+        android:layout_alignRight="@+id/buttonSaveAll"
+        android:textOn="ON"
+        android:textOff="OFF"/>
 
     <TextView
         android:layout_width="wrap_content"

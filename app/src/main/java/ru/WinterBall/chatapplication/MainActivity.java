@@ -20,6 +20,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -32,17 +35,20 @@ public class MainActivity extends Activity {
 
     private int themeId = R.style.AppTheme;
 
-    Socket ClientSocket;
-
     TextView chatView;
     EditText message;
     String nickname;
+    volatile String serverAnswer = "default";
+
+    Socket ClientSocket;
+    BufferedReader bReader;
+
     int userColor = Color.RED;
 
     public static final int TYPE_SYSTEM = 0;
     public static final int TYPE_USER = 1;
-    public static final int SERVER_PORT = 12378;
-    public static final String SERVER_ADRESS = "localhost";  // emulator IP
+    public static final int SERVER_PORT = 16212;
+    public static final String SERVER_ADRESS = "10.0.2.2";  // emulator IP
     //public static final String SERVER_ADRESS = "192.168.0.26"; //Pav PC Ip - for mobile tests
 
     @Override
@@ -213,7 +219,6 @@ public class MainActivity extends Activity {
 
     public class Server_thread implements Runnable {
         String message;
-        Socket ClientSocket;
 
         public Server_thread(String msg) { message = msg; }
 
@@ -227,7 +232,12 @@ public class MainActivity extends Activity {
                 writer.println(message);
                 writer.flush();
 
-                ClientSocket.close();
+                bReader = new BufferedReader(new InputStreamReader(ClientSocket.getInputStream()));
+
+                serverAnswer = bReader.readLine();
+                System.out.println("------------------- ANSWER: "+serverAnswer);
+                createMessage(serverAnswer, TYPE_USER);
+
             } catch (UnknownHostException e1) { e1.printStackTrace();
             } catch (Exception e) { e.printStackTrace(); }
         }
@@ -242,11 +252,13 @@ public class MainActivity extends Activity {
         if (message.getText().toString().replaceAll(" ", "").isEmpty()) {
             message.setHint("need more letters...");
         } else {
-            createMessage(message.getText().toString(), TYPE_USER);
+            //createMessage(message.getText().toString(), TYPE_USER);
 
             try {
                 Thread server_connect = new Thread( new Server_thread( message.getText().toString() ) );
                 server_connect.start();
+                //wait(2);
+                //createMessage(serverAnswer, TYPE_USER);
             } catch (Exception e) { e.getStackTrace(); }
 
             message.setHint("");
