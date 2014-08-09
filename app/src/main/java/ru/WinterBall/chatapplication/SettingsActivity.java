@@ -41,8 +41,6 @@ public class SettingsActivity extends Activity {
     EditText editNewNickname;
     Button btnChangeNick;
 
-    final String test = "HELLO";
-
     private int newThemeId;
 
     @Override
@@ -81,7 +79,7 @@ public class SettingsActivity extends Activity {
         nick.setSpan(new ForegroundColorSpan(newColor), 0, nick.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         NickNameLabel.append(nick);
 
-        //устанавливаем цвет для изменения
+        //устанавливаем цвет для измененияя
         switch (newColor) {
             case Color.RED:
                 buttonSelect.setBackgroundResource(redImg);
@@ -100,8 +98,6 @@ public class SettingsActivity extends Activity {
                 buttonSelect.setTag(magentaImg);
                 break;
         }
-
-        onStartik();
     }
 
     //метод для передачи данных после перезапуска активности
@@ -203,10 +199,6 @@ public class SettingsActivity extends Activity {
 
         setResult(RESULT_OK, answer);
         finish();
-    }
-
-    protected void onStartik() {
-        Toast.makeText(this, test, Toast.LENGTH_LONG).show();
     }
 
     public void onButtonNightModeClick(View view) {
