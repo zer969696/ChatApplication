@@ -8,6 +8,8 @@ import android.preference.PreferenceManager;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.view.DragEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -16,6 +18,10 @@ import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class SettingsActivity extends Activity {
@@ -23,20 +29,19 @@ public class SettingsActivity extends Activity {
     int newColor;
     private static boolean NICKNAME_CHANGE = false;
     String newNickname;
-    ImageButton buttonSelect;
+    ImageButton buttonSelect, buttonNightMode;
 
     final int redImg = R.drawable.red;
     final int greenImg = R.drawable.green;
     final int blueImg = R.drawable.blue;
     final int magentaImg = R.drawable.magenta;
+    final int moonImg = R.drawable.gnome_weather_clear_night;
 
     TextView NickNameLabel, switchTextView;
     EditText editNewNickname;
     Button btnChangeNick;
-    Switch themeSwitch;
 
     private int newThemeId;
-    private boolean isThemeChanged;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,12 +66,11 @@ public class SettingsActivity extends Activity {
         editNewNickname = (EditText) findViewById(R.id.editText_NewNick);
         btnChangeNick = (Button) findViewById(R.id.button_NickChange);
         buttonSelect = (ImageButton)findViewById(R.id.imageButtonColor);
-        switchTextView = (TextView)findViewById(R.id.textViewSwtich);
-        themeSwitch = (Switch)findViewById(R.id.switchTheme);
+        buttonNightMode = (ImageButton)findViewById(R.id.imageButton_nightMode);
 
         //если включен ночной режим(при переходе с мейна или пересоздании) то ставим тумблеры как надо!
         if (newThemeId == R.style.HoloDark) {
-            themeSwitch.setChecked(true);
+            buttonNightMode.setBackgroundResource(moonImg);
         }
 
         //устанавливаем никнейм для изменения (и ставим соответствующий цвет)
@@ -189,10 +193,8 @@ public class SettingsActivity extends Activity {
         finish();
     }
 
-    //метод определяющий текущее положение тублера и вызывающий перезагрузку активности(aga)
-    public void onClickSwitchTheme(View view) {
-
-        if (themeSwitch.isChecked()) {
+    public void onButtonNightModeClick(View view) {
+        if (newThemeId == R.style.AppTheme) {
             newThemeId = R.style.HoloDark;
             this.recreate();
         } else {
