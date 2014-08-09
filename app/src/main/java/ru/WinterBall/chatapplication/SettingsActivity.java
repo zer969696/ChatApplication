@@ -5,6 +5,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.view.DragEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -13,6 +18,10 @@ import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class SettingsActivity extends Activity {
@@ -20,20 +29,19 @@ public class SettingsActivity extends Activity {
     int newColor;
     private static boolean NICKNAME_CHANGE = false;
     String newNickname;
-    ImageButton buttonSelect;
+    ImageButton buttonSelect, buttonNightMode;
 
     final int redImg = R.drawable.red;
     final int greenImg = R.drawable.green;
     final int blueImg = R.drawable.blue;
     final int magentaImg = R.drawable.magenta;
+    final int moonImg = R.drawable.gnome_weather_clear_night;
 
     TextView NickNameLabel, switchTextView;
     EditText editNewNickname;
     Button btnChangeNick;
-    Switch themeSwitch;
 
     private int newThemeId;
-    private boolean isThemeChanged;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,16 +66,18 @@ public class SettingsActivity extends Activity {
         editNewNickname = (EditText) findViewById(R.id.editText_NewNick);
         btnChangeNick = (Button) findViewById(R.id.button_NickChange);
         buttonSelect = (ImageButton)findViewById(R.id.imageButtonColor);
-        switchTextView = (TextView)findViewById(R.id.textViewSwtich);
-        themeSwitch = (Switch)findViewById(R.id.switchTheme);
+        buttonNightMode = (ImageButton)findViewById(R.id.imageButton_nightMode);
 
         //если включен ночной режим(при переходе с мейна или пересоздании) то ставим тумблеры как надо!
         if (newThemeId == R.style.HoloDark) {
-            themeSwitch.setChecked(true);
+            buttonNightMode.setBackgroundResource(moonImg);
         }
 
-        //устанавливаем никнейм для изменения
-        NickNameLabel.setText("Ваш Никнейм: "+ newNickname);
+        //устанавливаем никнейм для изменения (и ставим соответствующий цвет)
+        NickNameLabel.setText("Ваш Никнейм: ");
+        SpannableStringBuilder nick = new SpannableStringBuilder(newNickname);
+        nick.setSpan(new ForegroundColorSpan(newColor), 0, nick.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        NickNameLabel.append(nick);
 
         //устанавливаем цвет для изменения
         switch (newColor) {
@@ -101,12 +111,21 @@ public class SettingsActivity extends Activity {
         super.onSaveInstanceState(outState);
     }
 
+    protected void setNickColorOnChange(int colorToChange) {
+        NickNameLabel.setText("Ваш Никнейм: ");
+        SpannableStringBuilder nick = new SpannableStringBuilder(newNickname);
+        nick.setSpan(new ForegroundColorSpan(colorToChange), 0, nick.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        NickNameLabel.append(nick);
+    }
+
     public void onColorSwitch(View view) {
 
         if (buttonSelect.getTag().equals(redImg)) {
             buttonSelect.setBackgroundResource(greenImg);
             buttonSelect.setTag(greenImg);
             newColor = Color.GREEN;
+
+            setNickColorOnChange(newColor);
 
             return;
         }
@@ -115,6 +134,8 @@ public class SettingsActivity extends Activity {
             buttonSelect.setTag(blueImg);
             newColor = Color.BLUE;
 
+            setNickColorOnChange(newColor);
+
             return;
         }
         if (buttonSelect.getTag().equals(blueImg)) {
@@ -122,12 +143,16 @@ public class SettingsActivity extends Activity {
             buttonSelect.setTag(magentaImg);
             newColor = Color.MAGENTA;
 
+            setNickColorOnChange(newColor);
+
             return;
         }
         if (buttonSelect.getTag().equals(magentaImg)) {
             buttonSelect.setBackgroundResource(redImg);
             buttonSelect.setTag(redImg);
             newColor = Color.RED;
+
+            setNickColorOnChange(newColor);
 
             return;
         }
@@ -142,13 +167,24 @@ public class SettingsActivity extends Activity {
 
             btnChangeNick.setText("Выполнить");
         } else {
-            NICKNAME_CHANGE = false;
-            editNewNickname.setVisibility(view.INVISIBLE);
-            NickNameLabel.setVisibility(view.VISIBLE);
+            newNickname = editNewNickname.getText().toString().replaceAll(" ", "");
 
-            newNickname = editNewNickname.getText().toString();
-            NickNameLabel.setText("Ваш Никнейм: "+newNickname);
-            btnChangeNick.setText("Изменить");
+            if (newNickname.isEmpty()) {
+                editNewNickname.setHint("need more letters...");
+                editNewNickname.setText("");
+            } else {
+                if (newNickname.equals("system")) {
+                    editNewNickname.setError("registred name");
+                } else {
+                    NICKNAME_CHANGE = false;
+                    editNewNickname.setVisibility(view.INVISIBLE);
+                    NickNameLabel.setVisibility(view.VISIBLE);
+
+                    //newNickname = editNewNickname.getText().toString();
+                    NickNameLabel.setText("Ваш Никнейм: " + newNickname);
+                    btnChangeNick.setText("Изменить");
+                }
+            }
         }
     }
 
@@ -165,10 +201,8 @@ public class SettingsActivity extends Activity {
         finish();
     }
 
-    //метод определяющий текущее положение тублера и вызывающий перезагрузку активности(aga)
-    public void onClickSwitchTheme(View view) {
-
-        if (themeSwitch.isChecked()) {
+    public void onButtonNightModeClick(View view) {
+        if (newThemeId == R.style.AppTheme) {
             newThemeId = R.style.HoloDark;
             this.recreate();
         } else {
