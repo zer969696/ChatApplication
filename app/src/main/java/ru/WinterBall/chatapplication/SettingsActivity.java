@@ -41,6 +41,8 @@ public class SettingsActivity extends Activity {
     EditText editNewNickname;
     Button btnChangeNick;
 
+    final String test = "HELLO";
+
     private int newThemeId;
 
     @Override
@@ -98,6 +100,8 @@ public class SettingsActivity extends Activity {
                 buttonSelect.setTag(magentaImg);
                 break;
         }
+
+        onStartik();
     }
 
     //метод для передачи данных после перезапуска активности
@@ -191,6 +195,10 @@ public class SettingsActivity extends Activity {
 
         setResult(RESULT_OK, answer);
         finish();
+    }
+
+    protected void onStartik() {
+        Toast.makeText(this, test, Toast.LENGTH_LONG).show();
     }
 
     public void onButtonNightModeClick(View view) {
