@@ -16,12 +16,14 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.accessibility.AccessibilityManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.io.PrintWriter;
@@ -38,10 +40,10 @@ public class MainActivity extends Activity {
     TextView chatView;
     EditText message;
     String nickname;
-    volatile String serverAnswer = "default";
 
-    Socket ClientSocket;
+    Socket clientSocket;
     BufferedReader bReader;
+    PrintWriter pWriter;
 
     int userColor = Color.RED;
 
@@ -93,6 +95,7 @@ public class MainActivity extends Activity {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
+        new Thread(new SetUpConnect()).start();
         chatView.setText(savedInstanceState.getCharSequence("chat"));
     }
 
@@ -114,6 +117,9 @@ public class MainActivity extends Activity {
 
                 chatView.setGravity(Gravity.NO_GRAVITY);
                 createMessage("log", TYPE_SYSTEM);
+
+                new Thread(new SetUpConnect()).start();
+
             } else {
                 //если пользователь при вводе логина нажал назад
                 this.finish();
@@ -216,34 +222,6 @@ public class MainActivity extends Activity {
     }
 
 
-
-    public class Server_thread implements Runnable {
-        String message;
-
-        public Server_thread(String msg) { message = msg; }
-
-        @Override
-        public void run(){
-            try {
-                ClientSocket = new Socket(InetAddress.getByName(SERVER_ADRESS), SERVER_PORT);
-                ClientSocket.setKeepAlive(false);
-
-                PrintWriter writer = new PrintWriter(ClientSocket.getOutputStream());
-                writer.println(message);
-                writer.flush();
-
-                bReader = new BufferedReader(new InputStreamReader(ClientSocket.getInputStream()));
-
-                serverAnswer = bReader.readLine();
-                System.out.println("------------------- ANSWER: "+serverAnswer);
-                createMessage(serverAnswer, TYPE_USER);
-
-            } catch (UnknownHostException e1) { e1.printStackTrace();
-            } catch (Exception e) { e.printStackTrace(); }
-        }
-    }
-
-
     public void sendButtonClick(View view) {
 
         chatView.setHint("");
@@ -255,11 +233,26 @@ public class MainActivity extends Activity {
             //createMessage(message.getText().toString(), TYPE_USER);
 
             try {
-                Thread server_connect = new Thread( new Server_thread( message.getText().toString() ) );
-                server_connect.start();
+                //Thread server_connect = new Thread( new Server_thread( message.getText().toString() ) );
+                //server_connect.start();
                 //wait(2);
                 //createMessage(serverAnswer, TYPE_USER);
-            } catch (Exception e) { e.getStackTrace(); }
+                pWriter.println(message.getText().toString());
+                pWriter.flush();
+
+
+                if (clientSocket.isClosed()) {
+                    Toast.makeText(this, "Disconnected. Trying to reconnect...", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                e.getStackTrace();
+            } finally {
+                if (clientSocket == null) {
+                    Toast.makeText(this, "Troubles with connection. Trying to reconnect...", Toast.LENGTH_SHORT).show();
+
+                    new Thread(new SetUpConnect()).start();
+                }
+            }
 
             message.setHint("");
         }
@@ -280,6 +273,44 @@ public class MainActivity extends Activity {
         } catch (Exception ex) {}
 
         return themeResId;
+    }
+
+    private class SetUpConnect implements Runnable {
+
+        @Override
+        public void run() {
+            try {
+                clientSocket = new Socket(SERVER_ADRESS, SERVER_PORT);
+
+                bReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                pWriter = new PrintWriter(clientSocket.getOutputStream());
+
+                new Thread(new ChatUpdate()).start();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    private class ChatUpdate implements Runnable {
+        String message;
+
+        @Override
+        public void run() {
+            try {
+                while ((message = bReader.readLine()) != null) {
+                    createMessage(message, TYPE_USER);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            } finally { //файнали нужен для 100% закрытия сокета(иначе баги всплывают)
+                try {
+                    clientSocket.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }
 
