@@ -42,8 +42,8 @@ public class MainActivity extends Activity {
     public static final int TYPE_SYSTEM = 0;
     public static final int TYPE_USER = 1;
     public static final int SERVER_PORT = 16212;
-    //public static final String SERVER_ADRESS = "10.0.2.2";  // emulator IP
-    public static final String SERVER_ADRESS = "192.168.0.26"; //Pav PC Ip - for mobile tests
+    public static final String SERVER_ADRESS = "10.0.2.2";  // emulator IP
+    //public static final String SERVER_ADRESS = "192.168.0.26"; //Pav PC Ip - for mobile tests
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
