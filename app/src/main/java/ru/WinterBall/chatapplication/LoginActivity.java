@@ -25,9 +25,13 @@ public class LoginActivity extends Activity {
             editLogin.setText("");
         } else {
             Intent loginAnswer = new Intent();
-            loginAnswer.putExtra("login", editLogin.getText().toString());
-            setResult(RESULT_OK, loginAnswer);
-            finish();
+            if (editLogin.getText().toString().replaceAll(" ", "").equals("system")) {
+                editLogin.setError("registred name");
+            } else {
+                loginAnswer.putExtra("login", editLogin.getText().toString());
+                setResult(RESULT_OK, loginAnswer);
+                finish();
+            }
         }
     }
 }

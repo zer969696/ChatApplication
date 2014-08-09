@@ -20,6 +20,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -32,11 +35,14 @@ public class MainActivity extends Activity {
 
     private int themeId = R.style.AppTheme;
 
-    Socket ClientSocket;
-
     TextView chatView;
     EditText message;
     String nickname;
+    volatile String serverAnswer = "default";
+
+    Socket ClientSocket;
+    BufferedReader bReader;
+
     int userColor = Color.RED;
 
     public static final int TYPE_SYSTEM = 0;
@@ -109,7 +115,8 @@ public class MainActivity extends Activity {
                 chatView.setGravity(Gravity.NO_GRAVITY);
                 createMessage("log", TYPE_SYSTEM);
             } else {
-                System.exit(0);
+                //если пользователь при вводе логина нажал назад
+                this.finish();
             }
         }
 
@@ -196,6 +203,9 @@ public class MainActivity extends Activity {
             case R.id.action_about:
 
                 Intent aboutOpen = new Intent(this, AboutActivity.class);
+
+                aboutOpen.putExtra("theme", getThemeID());
+
                 startActivity(aboutOpen);
                 break;
 
@@ -209,7 +219,6 @@ public class MainActivity extends Activity {
 
     public class Server_thread implements Runnable {
         String message;
-        Socket ClientSocket;
 
         public Server_thread(String msg) { message = msg; }
 
@@ -223,7 +232,12 @@ public class MainActivity extends Activity {
                 writer.println(message);
                 writer.flush();
 
-                ClientSocket.close();
+                bReader = new BufferedReader(new InputStreamReader(ClientSocket.getInputStream()));
+
+                serverAnswer = bReader.readLine();
+                System.out.println("------------------- ANSWER: "+serverAnswer);
+                createMessage(serverAnswer, TYPE_USER);
+
             } catch (UnknownHostException e1) { e1.printStackTrace();
             } catch (Exception e) { e.printStackTrace(); }
         }
@@ -238,11 +252,13 @@ public class MainActivity extends Activity {
         if (message.getText().toString().replaceAll(" ", "").isEmpty()) {
             message.setHint("need more letters...");
         } else {
-            createMessage(message.getText().toString(), TYPE_USER);
+            //createMessage(message.getText().toString(), TYPE_USER);
 
             try {
                 Thread server_connect = new Thread( new Server_thread( message.getText().toString() ) );
                 server_connect.start();
+                //wait(2);
+                //createMessage(serverAnswer, TYPE_USER);
             } catch (Exception e) { e.getStackTrace(); }
 
             message.setHint("");

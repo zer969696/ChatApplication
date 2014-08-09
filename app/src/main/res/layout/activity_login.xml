@@ -21,7 +21,7 @@
         android:layout_centerHorizontal="true"
         android:hint="@string/loginHint_text"
         android:singleLine="true"
-        android:maxLength="11"
+        android:maxLength="16"
         android:gravity="center" />
 
     <Button
