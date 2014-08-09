@@ -49,7 +49,7 @@ public class MainActivity extends Activity {
 
     public static final int TYPE_SYSTEM = 0;
     public static final int TYPE_USER = 1;
-    public static final int SERVER_PORT = 16212;
+    public static final int SERVER_PORT = 12378;
     public static final String SERVER_ADRESS = "10.0.2.2";  // emulator IP
     //public static final String SERVER_ADRESS = "192.168.0.26"; //Pav PC Ip - for mobile tests
 
@@ -243,6 +243,8 @@ public class MainActivity extends Activity {
 
                 if (clientSocket.isClosed()) {
                     Toast.makeText(this, "Disconnected. Trying to reconnect...", Toast.LENGTH_SHORT).show();
+
+                    new Thread(new SetUpConnect()).start();
                 }
             } catch (Exception e) {
                 e.getStackTrace();
