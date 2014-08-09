@@ -237,6 +237,11 @@ public class MainActivity extends Activity {
                 //server_connect.start();
                 //wait(2);
                 //createMessage(serverAnswer, TYPE_USER);
+
+                if (clientSocket.isConnected()) {
+                    new Thread(new ChatUpdate()).start();
+                }
+
                 pWriter.println(message.getText().toString());
                 pWriter.flush();
 
@@ -287,7 +292,7 @@ public class MainActivity extends Activity {
                 bReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 pWriter = new PrintWriter(clientSocket.getOutputStream());
 
-                new Thread(new ChatUpdate()).start();
+
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
