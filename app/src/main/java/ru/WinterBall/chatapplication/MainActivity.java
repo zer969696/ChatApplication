@@ -49,9 +49,9 @@ public class MainActivity extends Activity {
 
     public static final int TYPE_SYSTEM = 0;
     public static final int TYPE_USER = 1;
-    public static final int SERVER_PORT = 16212;//12378;
-    public static final String SERVER_ADRESS = "10.0.2.2";  // emulator IP
-    //public static final String SERVER_ADRESS = "benzoback.ddns.net";  // emulator IP
+    public static final int SERVER_PORT = 12378;//12378;
+    //public static final String SERVER_ADRESS = "10.0.2.2";  // emulator IP
+    public static final String SERVER_ADRESS = "benzoback.ddns.net";  // emulator IP
     //public static final String SERVER_ADRESS = "192.168.0.26"; //Pav PC Ip - for mobile tests
 
     @Override
@@ -229,6 +229,8 @@ public class MainActivity extends Activity {
             userPrefix.setSpan(new ForegroundColorSpan(color), 0, nick.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             chatView.append(userPrefix);
             chatView.append(": " + msg +"\r\n");
+
+
     }
 
     @Override
@@ -371,6 +373,7 @@ public class MainActivity extends Activity {
                     Message msg = new Message();
                     msg.obj = message;
                     handleMsg.sendMessage(msg);
+                    chatView.setMovementMethod(new ScrollingMovementMethod());
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
