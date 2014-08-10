@@ -285,16 +285,7 @@ public class MainActivity extends Activity {
                 if (clientSocket.isConnected() && reconnect) {
                     reconnect = false;
 
-                    new Thread(new ChatUpdate()).start();
-                }
-
-                if (!saidHello) {
-                    sayHelloToServer(nickname);
-                }
-
-                if (isNickChanged) {
-                    pWriter.println(nickUpdate);
-                    pWriter.flush();
+                    //new Thread(new ChatUpdate()).start();
                 }
 
                 pWriter.println(nickname + ":" + userColor + ":" + message.getText().toString());
@@ -348,6 +339,18 @@ public class MainActivity extends Activity {
                 bReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 pWriter = new PrintWriter(clientSocket.getOutputStream());
 
+                if (!saidHello) {
+                    sayHelloToServer(nickname);
+                }
+
+                if (isNickChanged) {
+                    pWriter.println(nickUpdate);
+                    pWriter.flush();
+
+                    isNickChanged = false;
+                }
+
+                new Thread(new ChatUpdate()).start();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
