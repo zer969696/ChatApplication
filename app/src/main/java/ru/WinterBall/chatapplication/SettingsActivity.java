@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -39,9 +40,11 @@ public class SettingsActivity extends Activity {
 
     TextView NickNameLabel, switchTextView;
     EditText editNewNickname;
-    Button btnChangeNick;
+    private Button btnChangeNick;
+    private Button buttonSaveAll;
 
     private int newThemeId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +70,7 @@ public class SettingsActivity extends Activity {
         btnChangeNick = (Button) findViewById(R.id.button_NickChange);
         buttonSelect = (ImageButton)findViewById(R.id.imageButtonColor);
         buttonNightMode = (ImageButton)findViewById(R.id.imageButton_nightMode);
+        buttonSaveAll = (Button)findViewById(R.id.buttonSaveAll);
 
         //если включен ночной режим(при переходе с мейна или пересоздании) то ставим тумблеры как надо!
         if (newThemeId == R.style.HoloDark) {
@@ -160,13 +164,17 @@ public class SettingsActivity extends Activity {
 
 
     public void onClick_ChangeNick(View view) {
+
         if (!NICKNAME_CHANGE) {
             NICKNAME_CHANGE = true;
             NickNameLabel.setVisibility(view.INVISIBLE);
             editNewNickname.setVisibility(view.VISIBLE);
+            editNewNickname.setText(newNickname);
+            editNewNickname.setSelection(newNickname.length());
 
             buttonSelect.setEnabled(false);
             buttonNightMode.setEnabled(false);
+            buttonSaveAll.setEnabled(false);
 
             btnChangeNick.setText("Выполнить");
         } else {
@@ -191,6 +199,7 @@ public class SettingsActivity extends Activity {
 
             buttonSelect.setEnabled(true);
             buttonNightMode.setEnabled(true);
+            buttonSaveAll.setEnabled(true);
             setNickColorOnChange(newColor);
 
         }
@@ -217,5 +226,12 @@ public class SettingsActivity extends Activity {
             newThemeId = R.style.AppTheme;
             this.recreate();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        NICKNAME_CHANGE = false;
     }
 }

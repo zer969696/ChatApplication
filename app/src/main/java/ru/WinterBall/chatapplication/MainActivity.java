@@ -48,7 +48,7 @@ public class MainActivity extends Activity {
 
     public static final int SERVER_PORT = 12378;
     public static final String SERVER_ADRESS = "10.0.2.2";  // emulator IP
-    //public static final String SERVER_ADRESS = "192.168.0.26"; //Pav PC Ip - for mobile tests
+    //public static final String SERVER_ADRESS = "benzoback.ddns.net"; //Pav PC Ip - for mobile tests
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,17 +158,21 @@ public class MainActivity extends Activity {
                 userColor = data.getExtras().getInt("color");
                 themeId = data.getExtras().getInt("theme");
 
-                if (!oldNickname.equals(nickname) && clientSocket.isConnected()) {
-                    //createMessage(oldNickname, nickname, Color.GRAY);
-                    nickUpdate = "systemð" + String.valueOf(Color.GRAY) + "ð" + "\"" +
-                            oldNickname + "\"" + " теперь - " + "\"" + nickname + "\"";
+                try {
+                    if (!oldNickname.equals(nickname) && clientSocket.isConnected()) {
+                        //createMessage(oldNickname, nickname, Color.GRAY);
+                        nickUpdate = "systemð" + String.valueOf(Color.GRAY) + "ð" + "\"" +
+                                oldNickname + "\"" + " теперь - " + "\"" + nickname + "\"";
 
-                    if (themeId == oldThemeId) {
-                        pWriter.println(nickUpdate);
-                        pWriter.flush();
-                    } else {
-                        isNickChanged = true;
+                        if (themeId == oldThemeId) {
+                            pWriter.println(nickUpdate);
+                            pWriter.flush();
+                        } else {
+                            isNickChanged = true;
+                        }
                     }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
 
                 if (themeId != oldThemeId) {
