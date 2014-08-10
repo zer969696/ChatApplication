@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -44,6 +46,7 @@ public class MainActivity extends Activity {
     Socket clientSocket;
     BufferedReader bReader;
     PrintWriter pWriter;
+    Handler handleMsg;
 
     int userColor = Color.RED;
 
@@ -76,6 +79,14 @@ public class MainActivity extends Activity {
         if (savedInstanceState == null) {
             askLogin(1337);
         }
+
+        //хандлер для связи с окном чата (решает все проблемы, маленький ублюдок)
+        handleMsg = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                createMessage((String)msg.obj, TYPE_USER);
+            }
+        };
     }
 
     //при перезагрузке активности посылаем текущии данные для сохранения
@@ -306,7 +317,9 @@ public class MainActivity extends Activity {
         public void run() {
             try {
                 while ((message = bReader.readLine()) != null) {
-                    createMessage(message, TYPE_USER);
+                    Message msg = new Message();
+                    msg.obj = message;
+                    handleMsg.sendMessage(msg);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
