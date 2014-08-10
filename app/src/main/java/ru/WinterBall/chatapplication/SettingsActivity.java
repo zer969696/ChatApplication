@@ -1,6 +1,8 @@
 package ru.WinterBall.chatapplication;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -230,8 +232,8 @@ public class SettingsActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
 
         NICKNAME_CHANGE = false;
+        super.onBackPressed();
     }
 }

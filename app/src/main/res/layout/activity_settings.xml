@@ -86,13 +86,12 @@
         android:id="@+id/button_colorSwitch"
         android:background="@android:color/transparent"
         android:layout_alignBottom="@+id/imageButtonColor"
-        android:layout_alignLeft="@+id/button_nightMode"
-        android:layout_alignStart="@+id/button_nightMode"
+        android:layout_alignLeft="@+id/editText_NewNick"
         android:layout_alignTop="@+id/imageButtonColor"
         android:onClick="onColorSwitch"
         android:layout_marginLeft="3dp"
         android:layout_toLeftOf="@+id/imageButtonColor"
-        android:layout_toStartOf="@+id/imageButtonColor" />
+        android:gravity="center_vertical" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -107,6 +106,7 @@
         android:layout_alignTop="@+id/imageButton_nightMode"
         android:onClick="onButtonNightModeClick"
         android:layout_toLeftOf="@+id/imageButton_nightMode"
-        android:layout_toStartOf="@+id/imageButton_nightMode" />
+        android:layout_toStartOf="@+id/imageButton_nightMode"
+        android:gravity="center_vertical" />
 
 </RelativeLayout>
