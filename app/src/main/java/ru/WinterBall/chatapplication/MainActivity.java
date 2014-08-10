@@ -44,15 +44,17 @@ public class MainActivity extends Activity {
 
     int userColor = Color.RED;
 
+
     String nickUpdate;
     boolean isNickChanged = false;
 
     public static final int TYPE_SYSTEM = 0;
     public static final int TYPE_USER = 1;
-    public static final int SERVER_PORT = 12378;//12378;
+    public static int lineCount = 0;
+    public static final int SERVER_PORT = 16212;//12378;
     //public static final String SERVER_ADRESS = "10.0.2.2";  // emulator IP
-    public static final String SERVER_ADRESS = "benzoback.ddns.net";  // emulator IP
-    //public static final String SERVER_ADRESS = "192.168.0.26"; //Pav PC Ip - for mobile tests
+    //public static final String SERVER_ADRESS = "benzoback.ddns.net";  // emulator IP
+    public static final String SERVER_ADRESS = "192.168.0.26"; //Pav PC Ip - for mobile tests
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,7 @@ public class MainActivity extends Activity {
             saidHello = savedInstanceState.getBoolean("hello");
             isNickChanged = savedInstanceState.getBoolean("isNickChanged");
             nickUpdate = savedInstanceState.getString("nickUpdate");
+            chatView.setScrollY(savedInstanceState.getInt("scrollY"));
         }
 
         setTheme(themeId);
@@ -113,6 +116,7 @@ public class MainActivity extends Activity {
         outState.putBoolean("hello", saidHello);
         outState.putString("nickUpdate", nickUpdate);
         outState.putBoolean("isNickChanged", isNickChanged);
+        outState.putInt("scrollY", chatView.getScrollY());
 
         super.onSaveInstanceState(outState);
     }
@@ -143,7 +147,6 @@ public class MainActivity extends Activity {
                 chatView.setHint("");
 
                 chatView.setGravity(Gravity.NO_GRAVITY);
-
                 new Thread(new SetUpConnect()).start();
 
             } else {
@@ -215,6 +218,7 @@ public class MainActivity extends Activity {
                 settingsOpen.putExtra("userColor", userColor);
                 settingsOpen.putExtra("nickname", nickname);
                 settingsOpen.putExtra("theme", getThemeID());
+                //settingsOpen.putExtra("scrollY", chatView.getScrollY());
 
                 startActivityForResult(settingsOpen, 12);
                 break;
@@ -235,10 +239,8 @@ public class MainActivity extends Activity {
     }
 
 
+
     public void sendButtonClick(View view) {
-
-
-
         chatView.setHint("");
         chatView.setGravity(Gravity.NO_GRAVITY);
 
@@ -266,7 +268,6 @@ public class MainActivity extends Activity {
                     new Thread(new SetUpConnect()).start();
                 }
             }
-
             message.setHint("");
         }
 
@@ -327,7 +328,7 @@ public class MainActivity extends Activity {
                     Message msg = new Message();
                     msg.obj = message;
                     handleMsg.sendMessage(msg);
-                    chatView.setMovementMethod(new ScrollingMovementMethod());
+                    ScrollingChat(chatView.getHeight(), chatView.getLineHeight(), ++lineCount);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -338,6 +339,13 @@ public class MainActivity extends Activity {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    public void ScrollingChat(int height, int lineSize, int linecount) {
+        if ( ( height - (linecount*lineSize) ) <= lineSize & height!=0 ) {
+            chatView.scrollTo(0, chatView.getScrollY()+lineSize);
+            System.out.println(chatView.getScrollY());
         }
     }
 }
