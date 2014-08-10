@@ -3,35 +3,27 @@ package ru.WinterBall.chatapplication;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.accessibility.AccessibilityManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
+
 
 
 
@@ -47,8 +39,13 @@ public class MainActivity extends Activity {
     BufferedReader bReader;
     PrintWriter pWriter;
     Handler handleMsg;
+    boolean reconnect = true;
+    boolean saidHello = false;
 
     int userColor = Color.RED;
+
+    String nickUpdate;
+    boolean isNickChanged = false;
 
     public static final int TYPE_SYSTEM = 0;
     public static final int TYPE_USER = 1;
@@ -65,6 +62,9 @@ public class MainActivity extends Activity {
             themeId = savedInstanceState.getInt("theme");
             nickname = savedInstanceState.getString("nick");
             userColor = savedInstanceState.getInt("col");
+            saidHello = savedInstanceState.getBoolean("hello");
+            isNickChanged = savedInstanceState.getBoolean("isNickChanged");
+            nickUpdate = savedInstanceState.getString("nickUpdate");
         }
 
         setTheme(themeId);
@@ -85,7 +85,21 @@ public class MainActivity extends Activity {
         handleMsg = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                createMessage((String)msg.obj, TYPE_USER);
+
+                String answer[] = ((String)msg.obj).split(":");
+                String nick;
+                String message = "";
+                int color;
+
+                nick = answer[0];
+                color = Integer.parseInt(answer[1]);
+                for (int i = 2; i < answer.length; i++) {
+                    message += answer[i];
+                }
+
+                //Toast.makeText(MainActivity.this.getApplicationContext(), String.valueOf(color == Color.RED), Toast.LENGTH_SHORT).show();
+
+                createMessage(message, nick, color);
             }
         };
     }
@@ -98,6 +112,9 @@ public class MainActivity extends Activity {
         outState.putInt("theme", themeId);
         outState.putString("nick", nickname);
         outState.putInt("col", userColor);
+        outState.putBoolean("hello", saidHello);
+        outState.putString("nickUpdate", nickUpdate);
+        outState.putBoolean("isNickChanged", isNickChanged);
 
         super.onSaveInstanceState(outState);
     }
@@ -128,7 +145,6 @@ public class MainActivity extends Activity {
                 chatView.setHint("");
 
                 chatView.setGravity(Gravity.NO_GRAVITY);
-                createMessage("log", TYPE_SYSTEM);
 
                 new Thread(new SetUpConnect()).start();
 
@@ -148,8 +164,17 @@ public class MainActivity extends Activity {
                 userColor = data.getExtras().getInt("color");
                 themeId = data.getExtras().getInt("theme");
 
-                if (!oldNickname.equals(nickname)) {
-                    createMessage(oldNickname, nickname, TYPE_SYSTEM);
+                if (!oldNickname.equals(nickname) && clientSocket.isConnected()) {
+                    //createMessage(oldNickname, nickname, Color.CYAN);
+                    nickUpdate = "system:" + String.valueOf(Color.CYAN) + ":" + "\"" +
+                            oldNickname + "\"" + " теперь - " + "\"" + nickname + "\"";
+
+                    if (themeId == oldThemeId) {
+                        pWriter.println(nickUpdate);
+                        pWriter.flush();
+                    } else {
+                        isNickChanged = true;
+                    }
                 }
 
                 if (themeId != oldThemeId) {
@@ -161,7 +186,14 @@ public class MainActivity extends Activity {
         }
     }
 
-    protected void createMessage(String one, String two, int type) {
+    protected void sayHelloToServer(String nick) {
+        pWriter.println("system:" + String.valueOf(Color.CYAN) + ":" + nick + " онлайн :)");
+        pWriter.flush();
+
+        saidHello = true;
+    }
+
+    /*protected void createMessage(String one, String two, int type) {
 
         if (type == TYPE_SYSTEM) {
 
@@ -177,12 +209,14 @@ public class MainActivity extends Activity {
 
         }
 
-    }
+    }*/
 
-    protected void createMessage(String msg, int type) {
+    protected void createMessage(String msg, String nick, int color) {
 
+
+        /*
         if (type == TYPE_SYSTEM) {
-            String userOnline = "system: " + nickname + " вошел в чат :)";
+            String userOnline = "system: " + nick + " вошел в чат :)";
 
             SpannableStringBuilder log = new SpannableStringBuilder(userOnline);
             log.setSpan(new ForegroundColorSpan(Color.CYAN), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -190,14 +224,11 @@ public class MainActivity extends Activity {
             chatView.append(log);
             chatView.append("\r\n");
         }
-
-        if (type == TYPE_USER) {
-
-            SpannableStringBuilder userPrefix = new SpannableStringBuilder(nickname);
-            userPrefix.setSpan(new ForegroundColorSpan(userColor), 0, nickname.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        */
+            SpannableStringBuilder userPrefix = new SpannableStringBuilder(nick);
+            userPrefix.setSpan(new ForegroundColorSpan(color), 0, nick.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             chatView.append(userPrefix);
             chatView.append(": " + msg +"\r\n");
-        }
     }
 
     @Override
@@ -238,6 +269,8 @@ public class MainActivity extends Activity {
 
     public void sendButtonClick(View view) {
 
+
+
         chatView.setHint("");
         chatView.setGravity(Gravity.NO_GRAVITY);
 
@@ -252,16 +285,19 @@ public class MainActivity extends Activity {
                 //wait(2);
                 //createMessage(serverAnswer, TYPE_USER);
 
-                if (clientSocket.isConnected()) {
-                    new Thread(new ChatUpdate()).start();
+                if (clientSocket.isConnected() && reconnect) {
+                    reconnect = false;
+
+                    //new Thread(new ChatUpdate()).start();
                 }
 
-                pWriter.println(message.getText().toString());
+                pWriter.println(nickname + ":" + userColor + ":" + message.getText().toString());
                 pWriter.flush();
 
 
                 if (clientSocket.isClosed()) {
                     Toast.makeText(this, "Disconnected. Trying to reconnect...", Toast.LENGTH_SHORT).show();
+                    reconnect = true;
 
                     new Thread(new SetUpConnect()).start();
                 }
@@ -291,7 +327,7 @@ public class MainActivity extends Activity {
             Method method = clazz.getMethod("getThemeResId");
             method.setAccessible(true);
             themeResId = (Integer) method.invoke(this);
-        } catch (Exception ex) {}
+        } catch (Exception ignored) {}
 
         return themeResId;
     }
@@ -306,7 +342,18 @@ public class MainActivity extends Activity {
                 bReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 pWriter = new PrintWriter(clientSocket.getOutputStream());
 
+                if (!saidHello) {
+                    sayHelloToServer(nickname);
+                }
 
+                if (isNickChanged) {
+                    pWriter.println(nickUpdate);
+                    pWriter.flush();
+
+                    isNickChanged = false;
+                }
+
+                new Thread(new ChatUpdate()).start();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -319,6 +366,7 @@ public class MainActivity extends Activity {
         @Override
         public void run() {
             try {
+
                 while ((message = bReader.readLine()) != null) {
                     Message msg = new Message();
                     msg.obj = message;

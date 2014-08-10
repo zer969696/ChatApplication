@@ -165,6 +165,9 @@ public class SettingsActivity extends Activity {
             NickNameLabel.setVisibility(view.INVISIBLE);
             editNewNickname.setVisibility(view.VISIBLE);
 
+            buttonSelect.setEnabled(false);
+            buttonNightMode.setEnabled(false);
+
             btnChangeNick.setText("Выполнить");
         } else {
             newNickname = editNewNickname.getText().toString().replaceAll(" ", "");
@@ -185,6 +188,11 @@ public class SettingsActivity extends Activity {
                     btnChangeNick.setText("Изменить");
                 }
             }
+
+            buttonSelect.setEnabled(true);
+            buttonNightMode.setEnabled(true);
+            setNickColorOnChange(newColor);
+
         }
     }
 
