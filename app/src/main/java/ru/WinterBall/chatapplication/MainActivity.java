@@ -18,20 +18,15 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.accessibility.AccessibilityManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
+
 
 
 
@@ -47,6 +42,7 @@ public class MainActivity extends Activity {
     BufferedReader bReader;
     PrintWriter pWriter;
     Handler handleMsg;
+    boolean reconnect = true;
 
     int userColor = Color.RED;
 
@@ -235,6 +231,8 @@ public class MainActivity extends Activity {
 
     public void sendButtonClick(View view) {
 
+
+
         chatView.setHint("");
         chatView.setGravity(Gravity.NO_GRAVITY);
 
@@ -249,7 +247,9 @@ public class MainActivity extends Activity {
                 //wait(2);
                 //createMessage(serverAnswer, TYPE_USER);
 
-                if (clientSocket.isConnected()) {
+                if (clientSocket.isConnected() && reconnect) {
+                    reconnect = false;
+
                     new Thread(new ChatUpdate()).start();
                 }
 
@@ -259,6 +259,7 @@ public class MainActivity extends Activity {
 
                 if (clientSocket.isClosed()) {
                     Toast.makeText(this, "Disconnected. Trying to reconnect...", Toast.LENGTH_SHORT).show();
+                    reconnect = true;
 
                     new Thread(new SetUpConnect()).start();
                 }
