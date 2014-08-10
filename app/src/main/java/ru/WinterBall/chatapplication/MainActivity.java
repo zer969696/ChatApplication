@@ -46,8 +46,6 @@ public class MainActivity extends Activity {
     String nickUpdate;
     boolean isNickChanged = false;
 
-    public static final int TYPE_SYSTEM = 0;
-    public static final int TYPE_USER = 1;
     public static final int SERVER_PORT = 12378;
     public static final String SERVER_ADRESS = "10.0.2.2";  // emulator IP
     //public static final String SERVER_ADRESS = "192.168.0.26"; //Pav PC Ip - for mobile tests
@@ -161,8 +159,8 @@ public class MainActivity extends Activity {
                 themeId = data.getExtras().getInt("theme");
 
                 if (!oldNickname.equals(nickname) && clientSocket.isConnected()) {
-                    //createMessage(oldNickname, nickname, Color.CYAN);
-                    nickUpdate = "systemð" + String.valueOf(Color.CYAN) + "ð" + "\"" +
+                    //createMessage(oldNickname, nickname, Color.GRAY);
+                    nickUpdate = "systemð" + String.valueOf(Color.GRAY) + "ð" + "\"" +
                             oldNickname + "\"" + " теперь - " + "\"" + nickname + "\"";
 
                     if (themeId == oldThemeId) {
@@ -183,7 +181,7 @@ public class MainActivity extends Activity {
     }
 
     protected void sayHelloToServer(String nick) {
-        pWriter.println("systemð" + String.valueOf(Color.CYAN) + "ð" + nick + " онлайн :)");
+        pWriter.println("systemð" + String.valueOf(Color.GRAY) + "ð" + nick + " онлайн :)");
         pWriter.flush();
 
         saidHello = true;
