@@ -86,7 +86,7 @@ public class MainActivity extends Activity {
             @Override
             public void handleMessage(Message msg) {
 
-                String answer[] = ((String)msg.obj).split(":");
+                String answer[] = ((String)msg.obj).split("ð");
                 String nick;
                 String message = "";
                 int color;
@@ -96,8 +96,6 @@ public class MainActivity extends Activity {
                 for (int i = 2; i < answer.length; i++) {
                     message += answer[i];
                 }
-
-                //Toast.makeText(MainActivity.this.getApplicationContext(), String.valueOf(color == Color.RED), Toast.LENGTH_SHORT).show();
 
                 createMessage(message, nick, color);
             }
@@ -166,7 +164,7 @@ public class MainActivity extends Activity {
 
                 if (!oldNickname.equals(nickname) && clientSocket.isConnected()) {
                     //createMessage(oldNickname, nickname, Color.CYAN);
-                    nickUpdate = "system:" + String.valueOf(Color.CYAN) + ":" + "\"" +
+                    nickUpdate = "systemð" + String.valueOf(Color.CYAN) + "ð" + "\"" +
                             oldNickname + "\"" + " теперь - " + "\"" + nickname + "\"";
 
                     if (themeId == oldThemeId) {
@@ -187,50 +185,18 @@ public class MainActivity extends Activity {
     }
 
     protected void sayHelloToServer(String nick) {
-        pWriter.println("system:" + String.valueOf(Color.CYAN) + ":" + nick + " онлайн :)");
+        pWriter.println("systemð" + String.valueOf(Color.CYAN) + "ð" + nick + " онлайн :)");
         pWriter.flush();
 
         saidHello = true;
     }
 
-    /*protected void createMessage(String one, String two, int type) {
-
-        if (type == TYPE_SYSTEM) {
-
-            String userChangeNick = "system: " + one + " теперь: " + two;
-
-            SpannableStringBuilder log = new SpannableStringBuilder(userChangeNick);
-            log.setSpan(new ForegroundColorSpan(Color.CYAN), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            log.setSpan(new StyleSpan(Typeface.ITALIC), 6, userChangeNick.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            log.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), userChangeNick.length() - two.length(), userChangeNick.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            chatView.append(log);
-            chatView.append("\r\n");
-
-
-        }
-
-    }*/
-
     protected void createMessage(String msg, String nick, int color) {
 
-
-        /*
-        if (type == TYPE_SYSTEM) {
-            String userOnline = "system: " + nick + " вошел в чат :)";
-
-            SpannableStringBuilder log = new SpannableStringBuilder(userOnline);
-            log.setSpan(new ForegroundColorSpan(Color.CYAN), 0, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            log.setSpan(new StyleSpan(Typeface.ITALIC), 6, userOnline.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            chatView.append(log);
-            chatView.append("\r\n");
-        }
-        */
             SpannableStringBuilder userPrefix = new SpannableStringBuilder(nick);
             userPrefix.setSpan(new ForegroundColorSpan(color), 0, nick.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             chatView.append(userPrefix);
             chatView.append(": " + msg +"\r\n");
-
-
     }
 
     @Override
@@ -279,27 +245,15 @@ public class MainActivity extends Activity {
         if (message.getText().toString().replaceAll(" ", "").isEmpty()) {
             message.setHint("need more letters...");
         } else {
-            //createMessage(message.getText().toString(), TYPE_USER);
 
             try {
-                //Thread server_connect = new Thread( new Server_thread( message.getText().toString() ) );
-                //server_connect.start();
-                //wait(2);
-                //createMessage(serverAnswer, TYPE_USER);
 
-                if (clientSocket.isConnected() && reconnect) {
-                    reconnect = false;
-
-                    //new Thread(new ChatUpdate()).start();
-                }
-
-                pWriter.println(nickname + ":" + userColor + ":" + message.getText().toString());
+                pWriter.println(nickname + "ð" + userColor + "ð" + message.getText().toString());
                 pWriter.flush();
 
 
                 if (clientSocket.isClosed()) {
                     Toast.makeText(this, "Disconnected. Trying to reconnect...", Toast.LENGTH_SHORT).show();
-                    reconnect = true;
 
                     new Thread(new SetUpConnect()).start();
                 }
@@ -340,7 +294,7 @@ public class MainActivity extends Activity {
         public void run() {
             try {
                 clientSocket = new Socket(SERVER_ADRESS, SERVER_PORT);
-                clientSocket.setKeepAlive(true);
+
                 bReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 pWriter = new PrintWriter(clientSocket.getOutputStream());
 
@@ -379,7 +333,7 @@ public class MainActivity extends Activity {
                 ex.printStackTrace();
             } finally { //файнали нужен для 100% закрытия сокета(иначе баги всплывают)
                 try {
-                    //clientSocket.close();
+                    clientSocket.close();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

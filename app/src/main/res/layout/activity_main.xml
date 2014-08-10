@@ -23,7 +23,7 @@
         android:hint="@string/chat_hint"
         android:maxLines="2147483647"
         android:scrollbars="vertical"
-        android:textIsSelectable="false" />
+        android:textIsSelectable="false" /><!--"2147483647"-->
 
     <EditText
         android:layout_width="wrap_content"
