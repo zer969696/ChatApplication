@@ -5,7 +5,7 @@
     <string name="button_text">Send</string>
     <string name="textView_text">New Text</string>
     <string name="message_hint">Enter your message</string>
-    <string name="chat_hint">Chat will be there…</string>
+    <string name="chat_hint">Введите сообщение чтобы начать чатиться :)</string>
 
     <string name="about_title">About</string>
     <string name="action_about">About program</string>
