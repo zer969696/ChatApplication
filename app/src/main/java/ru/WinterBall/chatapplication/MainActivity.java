@@ -50,7 +50,7 @@ public class MainActivity extends Activity {
     public static final int TYPE_SYSTEM = 0;
     public static final int TYPE_USER = 1;
     public static final int SERVER_PORT = 12378;
-    public static final String SERVER_ADRESS = "10.0.2.2";  // emulator IP
+    public static final String SERVER_ADRESS = "benzoback.ddns.net";  // emulator IP
     //public static final String SERVER_ADRESS = "192.168.0.26"; //Pav PC Ip - for mobile tests
 
     @Override
@@ -288,7 +288,7 @@ public class MainActivity extends Activity {
         public void run() {
             try {
                 clientSocket = new Socket(SERVER_ADRESS, SERVER_PORT);
-
+                clientSocket.setKeepAlive(true);
                 bReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 pWriter = new PrintWriter(clientSocket.getOutputStream());
 
@@ -312,7 +312,7 @@ public class MainActivity extends Activity {
                 ex.printStackTrace();
             } finally { //файнали нужен для 100% закрытия сокета(иначе баги всплывают)
                 try {
-                    clientSocket.close();
+                    //clientSocket.close();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
