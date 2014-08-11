@@ -183,7 +183,8 @@ public class SettingsActivity extends Activity {
             newNickname = editNewNickname.getText().toString().replaceAll(" ", "");
 
             if (newNickname.isEmpty()) {
-                editNewNickname.setHint("need more letters...");
+                editNewNickname.setHint("  need more letters... ");
+                //editNewNickname.setHint("Enter your login here");
                 editNewNickname.setText("");
             } else {
                 if (newNickname.equals("system")) {
@@ -196,13 +197,13 @@ public class SettingsActivity extends Activity {
                     //newNickname = editNewNickname.getText().toString();
                     NickNameLabel.setText("Ваш Никнейм: " + newNickname);
                     btnChangeNick.setText("Изменить");
+
+                    buttonSelect.setEnabled(true);
+                    buttonNightMode.setEnabled(true);
+                    buttonSaveAll.setEnabled(true);
+                    setNickColorOnChange(newColor);
                 }
             }
-
-            buttonSelect.setEnabled(true);
-            buttonNightMode.setEnabled(true);
-            buttonSaveAll.setEnabled(true);
-            setNickColorOnChange(newColor);
 
         }
     }

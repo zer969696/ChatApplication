@@ -75,8 +75,10 @@
         android:background="@drawable/gnome_weather_clear"
         android:onClick="onButtonNightModeClick"
         android:layout_above="@+id/editText_NewNick"
-        android:layout_alignEnd="@+id/editText_NewNick"
-        android:layout_marginBottom="41dp" />
+        android:layout_marginBottom="41dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="50dp" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -86,12 +88,13 @@
         android:id="@+id/button_colorSwitch"
         android:background="@android:color/transparent"
         android:layout_alignBottom="@+id/imageButtonColor"
-        android:layout_alignLeft="@+id/editText_NewNick"
         android:layout_alignTop="@+id/imageButtonColor"
         android:onClick="onColorSwitch"
-        android:layout_marginLeft="3dp"
         android:layout_toLeftOf="@+id/imageButtonColor"
-        android:gravity="center_vertical" />
+        android:gravity="center_vertical"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="50dp" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -101,12 +104,13 @@
         android:id="@+id/button_nightMode"
         android:background="@android:color/transparent"
         android:layout_alignBottom="@+id/imageButton_nightMode"
-        android:layout_alignLeft="@+id/editText_NewNick"
-        android:layout_alignStart="@+id/editText_NewNick"
         android:layout_alignTop="@+id/imageButton_nightMode"
         android:onClick="onButtonNightModeClick"
+        android:gravity="center_vertical"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="50dp"
         android:layout_toLeftOf="@+id/imageButton_nightMode"
-        android:layout_toStartOf="@+id/imageButton_nightMode"
-        android:gravity="center_vertical" />
+        android:layout_toStartOf="@+id/imageButton_nightMode" />
 
 </RelativeLayout>
