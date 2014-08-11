@@ -9,44 +9,68 @@
     tools:context=".MainActivity"
     android:id="@+id/zhora">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/textViewChat"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_above="@+id/editTextMessage"
-        android:layout_alignRight="@+id/buttonSend"
-        android:layout_alignEnd="@+id/buttonSend"
-        android:hint="@string/chat_hint"
-        android:maxLines="2147483647"
-        android:scrollbars="vertical"
-        android:textIsSelectable="false" /><!--"2147483647"-->
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/editTextMessage"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/buttonSend"
-        android:layout_toStartOf="@+id/buttonSend"
-        android:layout_alignTop="@+id/buttonSend"
-        android:hint="@string/message_hint"
-        android:singleLine="true"
-        android:phoneNumber="false" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/button_text"
-        android:id="@+id/buttonSend"
-        android:layout_alignParentBottom="true"
+    <ScrollView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/gadost"
+        android:layout_above="@+id/relativeLayout"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:longClickable="false"
-        android:onClick="sendButtonClick" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:fillViewport="false"
+        android:foregroundGravity="bottom">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/textViewChat"
+            android:hint="@string/chat_hint"
+            android:maxLines="2147483647"
+            android:gravity="top"
+            android:textIsSelectable="false" />
+    </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="0px"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/relativeLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:text="@string/button_text"
+            android:onClick="sendButtonClick"
+            android:layout_alignParentTop="true"
+            android:id="@+id/buttonSend"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextMessage"
+            android:layout_alignParentTop="true"
+            android:hint="@string/message_hint"
+            android:singleLine="true"
+            android:phoneNumber="false"
+            android:layout_alignBottom="@+id/buttonSend"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/buttonSend"
+            android:layout_toStartOf="@+id/buttonSend" />
+
+    </RelativeLayout>
+
 </RelativeLayout>

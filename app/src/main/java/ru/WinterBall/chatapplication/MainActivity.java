@@ -1,6 +1,7 @@
 package ru.WinterBall.chatapplication;
 
 import android.app.Activity;
+import android.app.Notification;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,12 +11,17 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.io.BufferedReader;
@@ -23,8 +29,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.io.PrintWriter;
 import java.net.Socket;
-
-
+import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends Activity {
@@ -32,6 +37,7 @@ public class MainActivity extends Activity {
     private int themeId = R.style.AppTheme;
 
     TextView chatView;
+    ScrollView scrollView;
     EditText message;
     String nickname;
 
@@ -40,13 +46,14 @@ public class MainActivity extends Activity {
     PrintWriter pWriter;
     Handler handleMsg;
     boolean saidHello = false;
+    int i = 0;
 
     int userColor = Color.RED;
 
     String nickUpdate;
     boolean isNickChanged = false;
-    private int lineCount;
-    private int scrollY;
+    //private int lineCount;
+    //private int scrollY;
 
     public static final int SERVER_PORT = 12378;
     public static final String SERVER_ADRESS = "10.0.2.2";  // emulator IP
@@ -64,8 +71,8 @@ public class MainActivity extends Activity {
             isNickChanged = savedInstanceState.getBoolean("isNickChanged");
             nickUpdate = savedInstanceState.getString("nickUpdate");
             //chatView.setScrollY(savedInstanceState.getInt("scrollY"));
-            scrollY = savedInstanceState.getInt("scrollY");
-            lineCount = savedInstanceState.getInt("lineCount");
+            //scrollY = savedInstanceState.getInt("scrollY");
+            //lineCount = savedInstanceState.getInt("lineCount");
         }
 
         setTheme(themeId);
@@ -76,6 +83,28 @@ public class MainActivity extends Activity {
         chatView = (TextView)findViewById(R.id.textViewChat);
         chatView.setMovementMethod(new ScrollingMovementMethod());
         message = (EditText)findViewById(R.id.editTextMessage);
+        scrollView = (ScrollView)findViewById(R.id.gadost);
+
+        //сдвиг чата при открытии клавиатуры
+        message.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_UP:
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            public void run() {
+                                scrollView.fullScroll(View.FOCUS_DOWN);
+                            }
+                        }, 1000);
+
+                        break;
+                }
+
+                return false;
+            }
+        });
 
         //если это первый вход в приложение
         if (savedInstanceState == null) {
@@ -98,8 +127,15 @@ public class MainActivity extends Activity {
                     message += answer[i];
                 }
 
-                ScrollingChat(chatView.getHeight(), chatView.getLineHeight(), ++lineCount);
+                //ScrollingChat(chatView.getHeight(), chatView.getLineHeight(), ++lineCount);
                 createMessage(message, nick, color);
+
+                scrollView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.fullScroll(View.FOCUS_DOWN);
+                    }
+                });
             }
         };
     }
@@ -115,8 +151,8 @@ public class MainActivity extends Activity {
         outState.putBoolean("hello", saidHello);
         outState.putString("nickUpdate", nickUpdate);
         outState.putBoolean("isNickChanged", isNickChanged);
-        outState.putInt("scrollY", chatView.getScrollY());
-        outState.putInt("lineCount", lineCount);
+        //outState.putInt("scrollY", chatView.getScrollY());
+        //outState.putInt("lineCount", lineCount);
 
         super.onSaveInstanceState(outState);
     }
@@ -128,7 +164,7 @@ public class MainActivity extends Activity {
 
         new Thread(new SetUpConnect()).start();
         chatView.setText(savedInstanceState.getCharSequence("chat"));
-        chatView.setScrollY(scrollY);
+        //chatView.setScrollY(scrollY);
     }
 
     protected void askLogin(int code) {
