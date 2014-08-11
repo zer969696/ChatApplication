@@ -46,6 +46,7 @@ public class MainActivity extends Activity {
     String nickUpdate;
     boolean isNickChanged = false;
     private int lineCount;
+    private int scrollY;
 
     public static final int SERVER_PORT = 12378;
     public static final String SERVER_ADRESS = "10.0.2.2";  // emulator IP
@@ -62,7 +63,9 @@ public class MainActivity extends Activity {
             saidHello = savedInstanceState.getBoolean("hello");
             isNickChanged = savedInstanceState.getBoolean("isNickChanged");
             nickUpdate = savedInstanceState.getString("nickUpdate");
-            chatView.setScrollY(savedInstanceState.getInt("scrollY"));
+            //chatView.setScrollY(savedInstanceState.getInt("scrollY"));
+            scrollY = savedInstanceState.getInt("scrollY");
+            lineCount = savedInstanceState.getInt("lineCount");
         }
 
         setTheme(themeId);
@@ -95,6 +98,7 @@ public class MainActivity extends Activity {
                     message += answer[i];
                 }
 
+                ScrollingChat(chatView.getHeight(), chatView.getLineHeight(), ++lineCount);
                 createMessage(message, nick, color);
             }
         };
@@ -112,6 +116,7 @@ public class MainActivity extends Activity {
         outState.putString("nickUpdate", nickUpdate);
         outState.putBoolean("isNickChanged", isNickChanged);
         outState.putInt("scrollY", chatView.getScrollY());
+        outState.putInt("lineCount", lineCount);
 
         super.onSaveInstanceState(outState);
     }
@@ -123,6 +128,7 @@ public class MainActivity extends Activity {
 
         new Thread(new SetUpConnect()).start();
         chatView.setText(savedInstanceState.getCharSequence("chat"));
+        chatView.setScrollY(scrollY);
     }
 
     protected void askLogin(int code) {
@@ -327,7 +333,8 @@ public class MainActivity extends Activity {
                     Message msg = new Message();
                     msg.obj = message;
                     handleMsg.sendMessage(msg);
-                    ScrollingChat(chatView.getHeight(), chatView.getLineHeight(), ++lineCount);
+                    //ScrollingChat(chatView.getHeight(), chatView.getLineHeight(), ++lineCount); переместил в хандлер,
+                    // чтобы на сообщения приветствия и смены ника скролл так же работал)
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -344,7 +351,7 @@ public class MainActivity extends Activity {
     public void ScrollingChat(int height, int lineSize, int linecount) {
         if ( ( height - (linecount*lineSize) ) <= lineSize & height!=0 ) {
             chatView.scrollTo(0, chatView.getScrollY()+lineSize);
-            System.out.println(chatView.getScrollY());
+            //System.out.println(chatView.getScrollY());
         }
     }
 }
